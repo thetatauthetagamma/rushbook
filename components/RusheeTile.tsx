@@ -7,8 +7,8 @@ interface RusheeTileProps {
     Rushee_Uniquename: string;
     Rushee_Name: string;
     Bio: string;
-    Likes: string[];
-    Comments: string[];
+    Likes?: string[];
+    Comments?: string[];
     imageUrl: string;
   }
 
@@ -26,11 +26,11 @@ interface RusheeTileProps {
             <div className="relative h-64 w-full">
                 {imageUrl ? 
                 (
-                    <Image src={imageUrl} alt="Bar" layout='fill' objectFit="cover" className="rounded-lg w-full" />
+                    <Image src={imageUrl} alt="Rushee" layout='fill' objectFit="cover" className="rounded-lg w-full" />
                 )
                 :
                 (
-                    <Image src={thtlogo} alt="Bar" layout='fill' objectFit="cover" className="rounded-lg w-full" />
+                    <Image src={thtlogo} alt="Rushee" layout='fill' objectFit="cover" className="rounded-lg w-full" />
                 )
                 }
             </div>
@@ -38,7 +38,7 @@ interface RusheeTileProps {
                 <h1 className='p-2'>{Rushee_Name}</h1>
                 <h2 className='p-2'> Bio: {Bio}</h2>
                 <div className='flex items-center p-2'>
-                    <h3 className='p-2'> Likes: {Likes.length}</h3>
+                    <h3 className='p-2'> Likes: {Likes ? Likes.length : 0}</h3>
                     <h4 className='p-2'> Comments: {Comments}</h4>
                 </div>
             </div>
