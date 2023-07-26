@@ -1,5 +1,7 @@
 import React from 'react'
-import Image from 'next/image'
+import Image from "next/legacy/image"
+import thtlogo from '../public/tht-logo.png'
+
 
 interface RusheeTileProps {
     Rushee_Uniquename: string;
@@ -20,12 +22,26 @@ interface RusheeTileProps {
     }) => {
 
     return (
-        <div className = 'flex flex-col sm:w-80 md:w-96 lg:w-96 max-w-xl mx-auto overflow-hidden bg-gradient-to-r from-slate-950 via-blue-800 to-blue-500 rounded-lg shadow-md hover:scale-105 hover:shadow-2xl'>
-            <Image src={imageUrl} alt='rushee' layout='fill' objectFit='cover' className="rounded-lg w-full"></Image>
-            <h1>{Rushee_Name}</h1>
-            <h2>{Bio}</h2>
-            <h3>{Likes}</h3>
-            <h4>{Comments}</h4>
+        <div className = 'flex flex-col sm:w-80 md:w-96 lg:w-96 max-w-xl mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'>
+            <div className="relative h-64 w-full">
+                {imageUrl ? 
+                (
+                    <Image src={imageUrl} alt="Bar" layout='fill' objectFit="cover" className="rounded-lg w-full" />
+                )
+                :
+                (
+                    <Image src={thtlogo} alt="Bar" layout='fill' objectFit="cover" className="rounded-lg w-full" />
+                )
+                }
+            </div>
+            <div className='flex flex-col items-center text-white'>
+                <h1 className='p-2'>{Rushee_Name}</h1>
+                <h2 className='p-2'> Bio: {Bio}</h2>
+                <div className='flex items-center p-2'>
+                    <h3 className='p-2'> Likes: {Likes.length}</h3>
+                    <h4 className='p-2'> Comments: {Comments}</h4>
+                </div>
+            </div>
         </div>
     );
 };

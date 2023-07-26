@@ -58,7 +58,15 @@ export default function Home() {
     setBook(updatedBook);
   };
 
-
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event == 'SIGNED_IN') 
+      {
+        console.log('SIGNED_IN', session)
+      }
+    })
+  }, []);
+  
   const handleGoogleSignIn = async () => {
     const {data , error} = await supabase.auth.signInWithOAuth({provider: 'google'});
     console.log('here')
@@ -81,10 +89,10 @@ export default function Home() {
       </Head>
       <div className='flex flex-col items-center p-2'>
         <h1>THT Rushbook</h1>
-        <button className='bg-slate-900 text-white m-2' onClick={handleGoogleSignIn}>Sign in with Google</button>
-        <button className='bg-slate-900 text-white m-2' onClick={handleGoogleSignOut}>Sign out</button>
+        <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 rounded-lg' onClick={handleGoogleSignIn}>Sign in with Google</button>
+        <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 rounded-lg' onClick={handleGoogleSignOut}>Sign out</button>
       </div>
-      <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20'>
+      <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 '>
         {book.map((rushee) => (
           <RusheeTile
             key={rushee.Rushee_Uniquename}
