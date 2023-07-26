@@ -42,11 +42,11 @@ export default function AddRushee() {
             console.log(AvatarError)
         }
 
-        // setUniqueName(' ');
-        // setRusheeName(' ');
-        // setRusheeBio(' ');
-        // setImageUrl('');
-        // setAvatarImg(null);
+        setUniqueName(' ');
+        setRusheeName(' ');
+        setRusheeBio(' ');
+        setImageUrl('');
+        setAvatarImg(null);
     }
 
     const BackToHome = async () => {
