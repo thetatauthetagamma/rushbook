@@ -1,6 +1,76 @@
 import Head from 'next/head'
+import supabase from '../supabase.js';
+import { useEffect , useState } from 'react';
+import RusheeTile from '../components/RusheeTile';
+
+
+interface Rushee {
+  Rushee_Uniquename: string;
+  Rushee_Name: string;
+  Bio: string;
+  Likes: string[];
+  Comments: string[];
+  imageUrl: string;
+}
 
 export default function Home() {
+
+  const [book , setBook] = useState<Rushee[]>([]);
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      const {data , error} = await supabase.from('book').select('*')
+      if (error)
+      {
+        console.log(error)
+      } else {
+        console.log(data)
+        setBook(data || [])
+      }
+    }
+    fetchBook()
+  }, [])
+
+  useEffect(() => {
+    if (book.length > 0) {
+      getRusheeImages();
+    }
+  }, [book])
+
+  const getRusheeImages = async () => {
+    const updatedBook = await Promise.all(
+      book.map(async (rushee) => {
+        if (rushee.imageUrl) {
+          return rushee;
+        } else {
+          const { data: ImageData, error } = await supabase.storage.from('rushee').download(rushee.Rushee_Uniquename)
+          if (error) {
+            console.log(error)
+            return rushee;
+          } else {
+            const blob = new Blob([ImageData as BlobPart], { type: 'image/jpeg' })
+            const imageUrl = URL.createObjectURL(blob)
+            return { ...rushee, imageUrl }
+          }
+        }
+      })
+    );
+    setBook(updatedBook);
+  };
+
+
+  const handleGoogleSignIn = async () => {
+    const {data , error} = await supabase.auth.signInWithOAuth({provider: 'google'});
+    console.log('here')
+    console.log(data)
+    console.log(error)
+  }
+
+  const handleGoogleSignOut = async () => {
+    const {error} = await supabase.auth.signOut();
+  }
+  
+
   return (
     <div>
       <Head>
@@ -9,11 +79,24 @@ export default function Home() {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="favicon.png" />
       </Head>
-      <div>
+      <div className='flex flex-col items-center p-2'>
         <h1>THT Rushbook</h1>
+        <button className='bg-slate-900 text-white m-2' onClick={handleGoogleSignIn}>Sign in with Google</button>
+        <button className='bg-slate-900 text-white m-2' onClick={handleGoogleSignOut}>Sign out</button>
       </div>
-
+      <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20'>
+        {book.map((rushee) => (
+          <RusheeTile
+            key={rushee.Rushee_Uniquename}
+            Rushee_Uniquename={rushee.Rushee_Uniquename}
+            Rushee_Name={rushee.Rushee_Name}
+            Bio={rushee.Bio}
+            Likes={rushee.Likes}
+            Comments={rushee.Comments}
+            imageUrl={rushee.imageUrl}
+          />
+        ))}
+      </div>
     </div>
-    
   )
 }
