@@ -27,7 +27,8 @@ export default function AddRushee() {
     };
  
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (event) => {
+        event.preventDefault(); 
         const { error } = await supabase.from('book').insert([
             { Rushee_Uniquename: uniqueName, Rushee_Name: rusheeName, Bio: rusheeBio, Likes: [], Comments: []  }
         ])
@@ -35,18 +36,27 @@ export default function AddRushee() {
             console.log(error)
         }
 
-        const { data: avatarData, error: AvatarError } = await supabase.storage
-        .from('rushee')
-        .upload(uniqueName, imageUrl);
-        if (AvatarError) {
-            console.log(AvatarError)
+        console.log("imageUrl:", imageUrl);
+        
+        if (imageUrl) {
+            // Convert the file to a Blob
+            const fileBlob = new Blob([imageUrl]);
+    
+            const { data: avatarData, error: AvatarError } = await supabase.storage
+                .from('rushee')
+                .upload(uniqueName, fileBlob);
+                if (AvatarError) {
+                    console.log("Error uploading avatar:", AvatarError);
+                }
         }
 
         setUniqueName(' ');
         setRusheeName(' ');
         setRusheeBio(' ');
-        setImageUrl('');
+        setImageUrl(null);
         setAvatarImg(null);
+
+        console.log("Form submitted!");
     }
 
     const BackToHome = async () => {
@@ -60,15 +70,15 @@ export default function AddRushee() {
             <form className='flex flex-col w-full max-w-xl mx-auto bg-white shadow-xl rounded-md px-20'>
                 <div className='flex items-center p-4'>
                     <label className='p-4 font-bold'> Uniquename: </label>
-                    <input type="text" name="uniquename" onChange={(e) => setUniqueName(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg" />
+                    <input type="text" name="uniquename" value={uniqueName} onChange={(e) => setUniqueName(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg" />
                 </div>
                 <div className='flex items-center p-4'>
                     <label className='p-4 font-bold'> Name: </label>
-                    <input type="text" name="name" onChange={(e) => setRusheeName(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg" />
+                    <input type="text" name="name" value= {rusheeName} onChange={(e) => setRusheeName(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg" />
                 </div>
                 <div className='flex items-center p-4'>
                     <label className='p-4 font-bold'> Bio: </label>
-                    <input type="text" name="bio" onChange={(e) => setRusheeBio(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg" />
+                    <input type="text" name="bio" value={rusheeBio} onChange={(e) => setRusheeBio(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg" />
                 </div>
                 <div className='flex flex-col items-center p-4'>
                     <div className='flex p-4'>
@@ -76,12 +86,12 @@ export default function AddRushee() {
                         <input 
                             className='border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg'
                             type="file" 
-                            id="image" 
+                            name="image"
                             onChange={onImageChange} 
                             />
                     </div>
                 </div>
-                <button type='submit' className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mb-4' onClick={handleSubmit}> Add Rushee </button>
+                <button type='submit' className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mb-4' onClick={(e) => handleSubmit(e)}> Add Rushee </button>
             </form>
             <div className='px-20'>
                 <h1 className='text-4xl font-bold text-black bg-clip-text text-transparent py-2 text-center'> Preview </h1>
