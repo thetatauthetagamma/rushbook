@@ -158,7 +158,7 @@ export default function Home() {
                     </div>
                   ) 
                   : 
-                  (<h1>You are not an admin</h1>)
+                  (<h1>You are not an admin!</h1>)
                 }
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pt-4'>
