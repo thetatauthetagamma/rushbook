@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useEffect , useState} from 'react'
 import Image from "next/legacy/image"
 import thtlogo from '../public/tht-logo.png'
+import like from '../public/like.svg'
+import dislike from '../public/dislike.svg'
+import supabase from '@/supabase'
 
 
 interface RusheeTileProps {
@@ -9,17 +12,132 @@ interface RusheeTileProps {
     Bio: string;
     Likes?: string[];
     Comments?: string[];
+    Dislikes?: string[];
     imageUrl: string;
-  }
+}
 
-  const RusheeTile: React.FC<RusheeTileProps> = ({
+const RusheeTile: React.FC<RusheeTileProps> = ({
     Rushee_Uniquename,
     Rushee_Name,
     Bio,
     Likes,
     Comments,
+    Dislikes,
     imageUrl,
     }) => {
+
+    const [alreadyLiked, setAlreadyLiked] = useState(false);
+    const [alreadyDisliked, setAlreadyDisliked] = useState(false);
+
+    useEffect(() => {
+
+        const checkLikedStatus = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            console.log(user);
+            
+            if (user) {
+                const { data, error } = await supabase
+                .from('book')
+                .select('Likes')
+                .eq('Rushee_Uniquename', Rushee_Uniquename);
+
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(data);
+                    const likesArray = data[0]?.Likes || [];
+                    if (likesArray.includes(user.email)) {
+                        setAlreadyLiked(true);
+                    }
+                }
+            }
+        };
+
+        const checkDisLikedStatus = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            console.log(user);
+            
+            if (user) {
+                const { data, error } = await supabase
+                .from('book')
+                .select('dislikes')
+                .eq('Rushee_Uniquename', Rushee_Uniquename);
+
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(data);
+                    const likesArray = data[0]?.dislikes || [];
+                    if (likesArray.includes(user.email)) {
+                        setAlreadyDisliked(true);
+                    }
+                }
+            }
+        };
+
+        checkLikedStatus();
+        checkDisLikedStatus();
+    }, []);
+
+
+    
+    const handleLike = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log(user);
+    
+        if (user) {
+            const { data, error } = await supabase
+            .from('book')
+            .select('Likes')
+            .eq('Rushee_Uniquename', Rushee_Uniquename);
+    
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(data);
+                const likesArray = data[0]?.Likes || []; // Extract the Likes array or initialize as empty if not found
+                const updatedLikes = [...likesArray, user.email];
+    
+                const { error: updateError } = await supabase
+                    .from('book')
+                    .update({ Likes: updatedLikes })
+                    .eq('Rushee_Uniquename', Rushee_Uniquename);
+    
+                if (updateError) {
+                    console.log(updateError);
+                }
+            }
+        }
+    };
+
+    const handleDislike = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log(user);
+    
+        if (user) {
+            const { data, error } = await supabase
+            .from('book')
+            .select('dislikes')
+            .eq('Rushee_Uniquename', Rushee_Uniquename);
+    
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(data);
+                const DislikesArray = data[0]?.dislikes || []; // Extract the Likes array or initialize as empty if not found
+                const updatedDislikes = [...DislikesArray, user.email];
+    
+                const { error: updateError } = await supabase
+                    .from('book')
+                    .update({ dislikes: updatedDislikes })
+                    .eq('Rushee_Uniquename', Rushee_Uniquename);
+    
+                if (updateError) {
+                    console.log(updateError);
+                }
+            }
+        }
+    };
 
     return (
         <div className = 'flex flex-col sm:w-80 md:w-96 lg:w-96 max-w-xl mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'>
@@ -38,9 +156,26 @@ interface RusheeTileProps {
                 <h1 className='p-2'>{Rushee_Name}</h1>
                 <h2 className='p-2'> Bio: {Bio}</h2>
                 <div className='flex items-center p-2'>
-                    <h3 className='p-2'> Likes: {Likes ? Likes.length : 0}</h3>
-                    <h4 className='p-2'> Comments: {Comments}</h4>
+                    <div className='flex items-center px-4'>
+                        <h3 className='p-2'> Likes: {Likes ? Likes.length : 0}</h3> 
+                        {
+                            !alreadyLiked && 
+                            <a onClick={handleLike}>
+                            <Image src={like} className='hover:scale-105'></Image>
+                            </a>
+                        }
+                    </div>
+                    <div className='flex items-center px-4'>   
+                        <h3 className='p-2'> Dislikes: {Dislikes ? Dislikes.length : 0}</h3>
+                        {
+                            !alreadyDisliked && 
+                            <a onClick={handleDislike}>
+                            <Image src={dislike} className='hover:scale-105'></Image>
+                            </a>
+                        }
+                    </div>
                 </div>
+                <h4 className='p-2'> Comments: {Comments}</h4>
             </div>
         </div>
     );

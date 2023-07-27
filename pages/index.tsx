@@ -11,6 +11,7 @@ interface Rushee {
   Bio: string;
   Likes: string[];
   Comments: string[];
+  Dislikes: string[];
   imageUrl: string;
 }
 
@@ -170,6 +171,7 @@ export default function Home() {
                     Bio={rushee.Bio}
                     Likes={rushee.Likes}
                     Comments={rushee.Comments}
+                    Dislikes={rushee.Dislikes}
                     imageUrl={rushee.imageUrl}
                   />
                 ))}
