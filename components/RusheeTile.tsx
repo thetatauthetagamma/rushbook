@@ -28,6 +28,8 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
 
     const [alreadyLiked, setAlreadyLiked] = useState(false);
     const [alreadyDisliked, setAlreadyDisliked] = useState(false);
+    const [likesCount, setLikes] = useState(Likes ? Likes.length : 0);
+    const [dislikesCount, setDislikes] = useState(Dislikes ? Dislikes.length : 0);
 
     useEffect(() => {
 
@@ -49,7 +51,6 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     if (likesArray.includes(user.email)) {
                         setAlreadyLiked(true);
                     }
-                    Likes = likesArray;
                 }
             }
         };
@@ -72,7 +73,6 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     if (DislikesArray.includes(user.email)) {
                         setAlreadyDisliked(true);
                     }
-                    Dislikes = DislikesArray;
                 }
             }
         };
@@ -110,6 +110,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
             } else {
               // After successful update, set the state to reflect that the user has already liked
               setAlreadyLiked(true);
+              setLikes(updatedLikes.length);
             }
           }
         }
@@ -143,6 +144,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
             } else {
               // After successful update, set the state to reflect that the user has already disliked
               setAlreadyDisliked(true);
+              setDislikes(updatedDislikes.length);
             }
           }
         }
@@ -166,7 +168,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                 <h2 className='p-2'> Bio: {Bio}</h2>
                 <div className='flex items-center p-2'>
                     <div className='flex items-center px-4'>
-                        <h3 className='p-2'> Likes: {Likes ? Likes.length : 0}</h3> 
+                        <h3 className='p-2'> Likes: {likesCount} </h3> 
                         {
                             !alreadyLiked && 
                             <a onClick={handleLike}>
@@ -175,7 +177,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                         }
                     </div>
                     <div className='flex items-center px-4'>   
-                        <h3 className='p-2'> Dislikes: {Dislikes ? Dislikes.length : 0}</h3>
+                        <h3 className='p-2'> Dislikes: {dislikesCount} </h3>
                         {
                             !alreadyDisliked && 
                             <a onClick={handleDislike}>
