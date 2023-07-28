@@ -136,7 +136,7 @@ export default function Home() {
         <link rel="icon" href="favicon.png" />
       </Head>
       <div className='flex flex-col items-center p-2'>
-        <h1 className='text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 text-center'>THT Rushbook</h1>
+        <h1 className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 text-center'>THT Rushbook</h1>
         {isBrother ? (
           <div className='flex flex-col items-center'>
             <h2 className='text-2xl font-bold'>Welcome {userEmail}!</h2>
@@ -150,7 +150,7 @@ export default function Home() {
       {isBrother && (
         <div>
           <div className='flex flex-col items-center p-8'>
-            <h1 className='text-xl font-bold pb-4'>Here are all our Rushees! Please leave your thoughts!</h1>
+            <h1 className='text-xl font-bold pb-4 text-center'>Here are all our Rushees! Please leave your thoughts!</h1>
             {isAdmin === 'admin' ? (
               <div className='flex flex-col items-center'>
                 <h1 className='font-bold'>You are an admin</h1>
@@ -160,9 +160,9 @@ export default function Home() {
               <h1>You are not an admin!!!</h1>
             )}
           </div>
-          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pt-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-20 pt-4'>
             {book.map((rushee) => (
-              <RusheeTile
+                <RusheeTile
                 key={rushee.Rushee_Uniquename}
                 Rushee_Uniquename={rushee.Rushee_Uniquename}
                 Rushee_Name={rushee.Rushee_Name}
@@ -171,7 +171,7 @@ export default function Home() {
                 Comments={rushee.Comments}
                 Dislikes={rushee.Dislikes}
                 imageUrl={rushee.imageUrl}
-              />
+                />
             ))}
           </div>
         </div>

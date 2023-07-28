@@ -8,7 +8,7 @@ import disliked from '../public/disliked.svg'
 import supabase from '@/supabase'
 
 
-interface RusheeTileProps {
+interface RusheeModalTileProps {
     Rushee_Uniquename: string;
     Rushee_Name: string;
     Bio: string;
@@ -18,7 +18,7 @@ interface RusheeTileProps {
     imageUrl: string;
 }
 
-const RusheeTile: React.FC<RusheeTileProps> = ({
+const RusheeModalTile: React.FC<RusheeModalTileProps> = ({
     Rushee_Uniquename,
     Rushee_Name,
     Bio,
@@ -228,7 +228,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     
 
     return (
-        <div className = 'flex flex-col w-80 sm:w-80 md:w-96 lg:w-96 max-w-xl mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'>
+        <div className = 'flex flex-col w-4/5 mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'>
             <div className="relative h-64 w-full">
                 {imageUrl ? 
                 (
@@ -289,5 +289,4 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     );
 };
 
-export default RusheeTile;
-
+export default RusheeModalTile;
