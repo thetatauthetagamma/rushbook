@@ -61,18 +61,18 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
             if (user) {
                 const { data, error } = await supabase
                 .from('book')
-                .select('dislikes')
+                .select('Dislikes')
                 .eq('Rushee_Uniquename', Rushee_Uniquename);
 
                 if (error) {
                     console.log(error);
                 } else {
                     console.log(data);
-                    const dislikesArray = data[0]?.dislikes || [];
-                    if (dislikesArray.includes(user.email)) {
+                    const DislikesArray = data[0]?.Dislikes || [];
+                    if (DislikesArray.includes(user.email)) {
                         setAlreadyDisliked(true);
                     }
-                    Dislikes = dislikesArray;
+                    Dislikes = DislikesArray;
                 }
             }
         };
@@ -123,19 +123,19 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
         if (user) {
           const { data, error } = await supabase
             .from('book')
-            .select('dislikes')
+            .select('Dislikes')
             .eq('Rushee_Uniquename', Rushee_Uniquename);
       
           if (error) {
             console.log(error);
           } else {
             console.log(data);
-            const DislikesArray = data[0]?.dislikes || [];
+            const DislikesArray = data[0]?.Dislikes || [];
             const updatedDislikes = [...DislikesArray, user.email];
       
             const { error: updateError } = await supabase
               .from('book')
-              .update({ dislikes: updatedDislikes })
+              .update({ Dislikes: updatedDislikes })
               .eq('Rushee_Uniquename', Rushee_Uniquename);
       
             if (updateError) {

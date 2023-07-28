@@ -1,9 +1,10 @@
-import Head from 'next/head'
+// Import the necessary modules and components
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import Router from 'next/router';
 import supabase from '../supabase.js';
-import { useEffect , useState } from 'react';
 import RusheeTile from '../components/RusheeTile';
-import Router, { useRouter } from 'next/router';
-
+import { Session } from '@supabase/supabase-js';
 
 interface Rushee {
   Rushee_Uniquename: string;
@@ -16,49 +17,50 @@ interface Rushee {
 }
 
 export default function Home() {
-
-  const [book , setBook] = useState<Rushee[]>([]);
-  const [userEmail, setUserEmail] = useState(' ');
+  const [book, setBook] = useState<Rushee[]>([]);
+  const [userEmail, setUserEmail] = useState('');
   const [isBrother, setIsBrother] = useState(false);
-  const [isAdmin , setIsAdmin] = useState(' ');
+  const [isAdmin, setIsAdmin] = useState('');
 
-  //This will get the rushees info from the database
   useEffect(() => {
+    // Fetch the rushees info from the database
     const fetchBook = async () => {
-      const {data , error} = await supabase.from('book').select('*')
-      if (error)
-      {
-        console.log(error)
+      const { data, error } = await supabase.from('book').select('*');
+      if (error) {
+        console.log(error);
       } else {
-        console.log(data)
-        setBook(data || [])
+        console.log(data);
+        setBook(data || []);
       }
-    }
-    fetchBook()
-  }, [])
+    };
+    fetchBook();
+  }, []);
 
-  //This will trigger the getRusheeImages function when the book is updated
   useEffect(() => {
+    // Trigger getRusheeImages function when the book is updated
     if (book.length > 0) {
       getRusheeImages();
     }
-  }, [book])
+  }, [book]);
 
-  //This will get the rushee images from the storage
   const getRusheeImages = async () => {
+    // Get the rushee images from the storage
     const updatedBook = await Promise.all(
       book.map(async (rushee) => {
         if (rushee.imageUrl) {
           return rushee;
         } else {
-          const { data: ImageData, error } = await supabase.storage.from('rushee').download(rushee.Rushee_Uniquename)
+          const { data: ImageData, error } = await supabase
+            .storage
+            .from('rushee')
+            .download(rushee.Rushee_Uniquename);
           if (error) {
-            console.log(error)
+            console.log(error);
             return rushee;
           } else {
-            const blob = new Blob([ImageData as BlobPart], { type: 'image/jpeg' })
-            const imageUrl = URL.createObjectURL(blob)
-            return { ...rushee, imageUrl }
+            const blob = new Blob([ImageData as BlobPart], { type: 'image/jpeg' });
+            const imageUrl = URL.createObjectURL(blob);
+            return { ...rushee, imageUrl };
           }
         }
       })
@@ -66,119 +68,114 @@ export default function Home() {
     setBook(updatedBook);
   };
 
-  //This will check to see if the user is signed in and set the email
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event == 'SIGNED_IN') 
-      {
-        console.log('SIGNED_IN', session)
-        if(session != null)
-        {
-          setUserEmail(session.user.email || ' ');
+    const fetchSession = async () => {
+      try {
+        const session = await supabase.auth.getSession();
+        if (session) {
+          console.log(session)
+          setUserEmail(session.data.session?.user.email || '')
         }
+      } catch (error) {
+        console.log(error);
       }
-    })
+    };
+
+    fetchSession();
+    // Listen for changes in the authentication state
+    const authListener = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        setUserEmail(session.user?.email || '');
+      }
+    });
   }, []);
 
-  //This will check to see if the user is a brother
   useEffect(() => {
+    // Check if the user is a brother
     const checkStatus = async () => {
-      const {data , error} = await supabase.from('emails').select('*').eq('email' , userEmail)
-      if (error)
-      {
-        console.log(error)
+      const { data, error } = await supabase.from('emails').select('*').eq('email', userEmail);
+      if (error) {
+        console.log(error);
       } else {
-        console.log(data)
-        if (data.length > 0)
-        {
+        console.log(data);
+        if (data.length > 0) {
           setIsBrother(true);
-          setIsAdmin(data[0].Role)
+          setIsAdmin(data[0].Role);
         }
       }
-    }
-    checkStatus()
-  }, [userEmail])
+    };
+    checkStatus();
+  }, [userEmail]);
 
-  //This will handle the google sign in
   const handleGoogleSignIn = async () => {
-    const {data , error} = await supabase.auth.signInWithOAuth({provider: 'google'});
-    console.log('here')
-    console.log(data)
-    console.log(error)
-  }
+    // Handle the Google sign in
+    const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+    console.log('here');
+    console.log(data);
+    console.log(error);
+  };
 
-  //This will handle the google sign out
   const handleGoogleSignOut = async () => {
-    const {error} = await supabase.auth.signOut();
-    console.log(error)
+    // Handle the Google sign out
+    const { error } = await supabase.auth.signOut();
+    console.log(error);
     setIsBrother(false);
-  }
+  };
 
-  //This will handle the add rushee button
   const handleAddRushee = async () => {
-    Router.push('/AddRushee')
-  }
-  
+    // Handle the add rushee button
+    Router.push('/AddRushee');
+  };
+
   return (
     <div>
       <Head>
-      <title>THT Rushbook</title>
-      <meta name="description" content="Generated by create next app" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="favicon.png" />
+        <title>THT Rushbook</title>
+        <meta name="description" content="Generated by create next app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="favicon.png" />
       </Head>
       <div className='flex flex-col items-center p-2'>
         <h1 className='text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 text-center'>THT Rushbook</h1>
-        {
-          isBrother ? 
-          (
-            <div className='flex flex-col items-center'>
-              <h2 className='text-2xl font-bold'>Welcome {userEmail} !</h2>
-              <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignOut}>Sign out</button>
-            </div>
-          ) 
-          : 
-          (
-            <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignIn}>Sign in with Google</button>
-          )
-        }
+        {isBrother ? (
+          <div className='flex flex-col items-center'>
+            <h2 className='text-2xl font-bold'>Welcome {userEmail}!</h2>
+            <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignOut}>Sign out</button>
+          </div>
+        ) : (
+          <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignIn}>Sign in with Google</button>
+        )}
       </div>
       <hr className='h-1 mx-auto border-0 rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950' />
-      {
-        isBrother &&
-        (
-          <div>
-            <div className='flex flex-col items-center p-8'>
-                <h1 className='text-xl font-bold pb-4'>Here are all our Rushees! Please leave your thoughts!</h1>
-                { isAdmin == 'admin' ? 
-                  (
-                    <div className='flex flex-col items-center'>
-                      <h1 className='font-bold'>You are an admin</h1>
-                      <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleAddRushee} > Add Rushee </button>
-                    </div>
-                  ) 
-                  : 
-                  (<h1>You are not an admin!!!</h1>)
-                }
-            </div>
-            <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pt-4'>
-
-                {book.map((rushee) => (
-                  <RusheeTile
-                    key={rushee.Rushee_Uniquename}
-                    Rushee_Uniquename={rushee.Rushee_Uniquename}
-                    Rushee_Name={rushee.Rushee_Name}
-                    Bio={rushee.Bio}
-                    Likes={rushee.Likes}
-                    Comments={rushee.Comments}
-                    Dislikes={rushee.Dislikes}
-                    imageUrl={rushee.imageUrl}
-                  />
-                ))}
-            </div>
+      {isBrother && (
+        <div>
+          <div className='flex flex-col items-center p-8'>
+            <h1 className='text-xl font-bold pb-4'>Here are all our Rushees! Please leave your thoughts!</h1>
+            {isAdmin === 'admin' ? (
+              <div className='flex flex-col items-center'>
+                <h1 className='font-bold'>You are an admin</h1>
+                <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleAddRushee}>Add Rushee</button>
+              </div>
+            ) : (
+              <h1>You are not an admin!!!</h1>
+            )}
           </div>
-        )
-      }
+          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pt-4'>
+            {book.map((rushee) => (
+              <RusheeTile
+                key={rushee.Rushee_Uniquename}
+                Rushee_Uniquename={rushee.Rushee_Uniquename}
+                Rushee_Name={rushee.Rushee_Name}
+                Bio={rushee.Bio}
+                Likes={rushee.Likes}
+                Comments={rushee.Comments}
+                Dislikes={rushee.Dislikes}
+                imageUrl={rushee.imageUrl}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
