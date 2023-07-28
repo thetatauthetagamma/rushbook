@@ -6,6 +6,7 @@ import liked from '../public/liked.svg'
 import dislike from '../public/dislike.svg'
 import disliked from '../public/disliked.svg'
 import supabase from '@/supabase'
+import Router from 'next/router'
 
 
 interface RusheeTileProps {
@@ -15,7 +16,7 @@ interface RusheeTileProps {
     Likes?: string[];
     Comments?: string[];
     Dislikes?: string[];
-    imageUrl: string;
+    imageUrl?: string;
 }
 
 const RusheeTile: React.FC<RusheeTileProps> = ({
@@ -225,7 +226,9 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
         }
       };
 
-    
+    const handleSeeMore = () => {
+        Router.push(`/rushee/${Rushee_Uniquename}`);
+    };
 
     return (
         <div className = 'flex flex-col w-80 sm:w-80 md:w-96 lg:w-96 max-w-xl mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'>
@@ -247,6 +250,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                 <h3 className="text-center line-clamp-2 truncate whitespace-normal px-2 ">
                   {Bio}
                 </h3>
+                <button onClick={handleSeeMore}> See More </button>
                 <div className='flex items-center p-2'>
                     <div className='flex items-center px-4'>
                         <h3 className='p-2'> Likes: {likesCount} </h3> 
