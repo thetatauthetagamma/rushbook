@@ -49,6 +49,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     if (likesArray.includes(user.email)) {
                         setAlreadyLiked(true);
                     }
+                    Likes = likesArray;
                 }
             }
         };
@@ -71,6 +72,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     if (dislikesArray.includes(user.email)) {
                         setAlreadyDisliked(true);
                     }
+                    Dislikes = dislikesArray;
                 }
             }
         };
