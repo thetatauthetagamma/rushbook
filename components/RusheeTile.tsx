@@ -67,8 +67,8 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     console.log(error);
                 } else {
                     console.log(data);
-                    const likesArray = data[0]?.dislikes || [];
-                    if (likesArray.includes(user.email)) {
+                    const dislikesArray = data[0]?.dislikes || [];
+                    if (dislikesArray.includes(user.email)) {
                         setAlreadyDisliked(true);
                     }
                 }
@@ -84,60 +84,67 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     const handleLike = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         console.log(user);
-    
+      
         if (user) {
-            const { data, error } = await supabase
+          const { data, error } = await supabase
             .from('book')
             .select('Likes')
             .eq('Rushee_Uniquename', Rushee_Uniquename);
-    
-            if (error) {
-                console.log(error);
+      
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(data);
+            const likesArray = data[0]?.Likes || [];
+            const updatedLikes = [...likesArray, user.email];
+      
+            const { error: updateError } = await supabase
+              .from('book')
+              .update({ Likes: updatedLikes })
+              .eq('Rushee_Uniquename', Rushee_Uniquename);
+      
+            if (updateError) {
+              console.log(updateError);
             } else {
-                console.log(data);
-                const likesArray = data[0]?.Likes || []; // Extract the Likes array or initialize as empty if not found
-                const updatedLikes = [...likesArray, user.email];
-    
-                const { error: updateError } = await supabase
-                    .from('book')
-                    .update({ Likes: updatedLikes })
-                    .eq('Rushee_Uniquename', Rushee_Uniquename);
-    
-                if (updateError) {
-                    console.log(updateError);
-                }
+              // After successful update, set the state to reflect that the user has already liked
+              setAlreadyLiked(true);
             }
+          }
         }
-    };
+      };
+      
 
     const handleDislike = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         console.log(user);
-    
+      
         if (user) {
-            const { data, error } = await supabase
+          const { data, error } = await supabase
             .from('book')
             .select('dislikes')
             .eq('Rushee_Uniquename', Rushee_Uniquename);
-    
-            if (error) {
-                console.log(error);
+      
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(data);
+            const DislikesArray = data[0]?.dislikes || [];
+            const updatedDislikes = [...DislikesArray, user.email];
+      
+            const { error: updateError } = await supabase
+              .from('book')
+              .update({ dislikes: updatedDislikes })
+              .eq('Rushee_Uniquename', Rushee_Uniquename);
+      
+            if (updateError) {
+              console.log(updateError);
             } else {
-                console.log(data);
-                const DislikesArray = data[0]?.dislikes || []; // Extract the Likes array or initialize as empty if not found
-                const updatedDislikes = [...DislikesArray, user.email];
-    
-                const { error: updateError } = await supabase
-                    .from('book')
-                    .update({ dislikes: updatedDislikes })
-                    .eq('Rushee_Uniquename', Rushee_Uniquename);
-    
-                if (updateError) {
-                    console.log(updateError);
-                }
+              // After successful update, set the state to reflect that the user has already disliked
+              setAlreadyDisliked(true);
             }
+          }
         }
-    };
+      };
 
     return (
         <div className = 'flex flex-col sm:w-80 md:w-96 lg:w-96 max-w-xl mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'>
