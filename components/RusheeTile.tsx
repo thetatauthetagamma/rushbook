@@ -2,7 +2,9 @@ import React, { useEffect , useState} from 'react'
 import Image from "next/legacy/image"
 import thtlogo from '../public/tht-logo.png'
 import like from '../public/like.svg'
+import liked from '../public/liked.svg'
 import dislike from '../public/dislike.svg'
+import disliked from '../public/disliked.svg'
 import supabase from '@/supabase'
 
 
@@ -115,6 +117,43 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
           }
         }
       };
+
+      const handleRemoveLike = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log(user);
+      
+        if (user) {
+          const { data, error } = await supabase
+            .from('book')
+            .select('Likes')
+            .eq('Rushee_Uniquename', Rushee_Uniquename);
+      
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(data);
+            const likesArray = data[0]?.Likes || [];
+      
+            // Remove the user's email from the Likes array
+            const updatedLikes = likesArray.filter((email: string | undefined) => email !== user.email);
+      
+            const { error: updateError } = await supabase
+              .from('book')
+              .update({ Likes: updatedLikes })
+              .eq('Rushee_Uniquename', Rushee_Uniquename);
+      
+            if (updateError) {
+              console.log(updateError);
+            } else {
+              // After successful update, set the state or perform any other necessary actions
+              console.log('Like removed successfully!');
+              setAlreadyLiked(false); // Set the state to reflect that the user has not liked
+              setLikes(updatedLikes.length);
+            }
+          }
+        }
+      };
+      
       
 
     const handleDislike = async () => {
@@ -150,6 +189,42 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
         }
       };
 
+      const handleRemoveDislike = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log(user);
+      
+        if (user) {
+          const { data, error } = await supabase
+            .from('book')
+            .select('Dislikes')
+            .eq('Rushee_Uniquename', Rushee_Uniquename);
+      
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(data);
+            const DislikesArray = data[0]?.Dislikes || [];
+            
+            // Remove the user's email from the Dislikes array
+            const updatedDislikes = DislikesArray.filter((email: string | undefined) => email !== user.email);
+      
+            const { error: updateError } = await supabase
+              .from('book')
+              .update({ Dislikes: updatedDislikes })
+              .eq('Rushee_Uniquename', Rushee_Uniquename);
+      
+            if (updateError) {
+              console.log(updateError);
+            } else {
+              // After successful update, set the state or perform any other necessary actions
+              console.log('Dislike removed successfully!');
+              setAlreadyDisliked(false); // Set the state to reflect that the user has not disliked
+              setDislikes(updatedDislikes.length);
+            }
+          }
+        }
+      };
+
     return (
         <div className = 'flex flex-col sm:w-80 md:w-96 lg:w-96 max-w-xl mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'>
             <div className="relative h-64 w-full">
@@ -170,19 +245,35 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     <div className='flex items-center px-4'>
                         <h3 className='p-2'> Likes: {likesCount} </h3> 
                         {
-                            !alreadyLiked && 
-                            <a onClick={handleLike}>
-                            <Image src={like} className='hover:scale-105'></Image>
-                            </a>
+                            !alreadyLiked ? 
+                            ( 
+                              <a onClick={handleLike}>
+                                <Image src={like} className='hover:scale-105'></Image>
+                              </a>  
+                            )
+                            :
+                            (
+                              <a onClick={handleRemoveLike}>
+                                <Image src={liked} className='hover:scale-105'></Image>
+                              </a>  
+                            )
                         }
                     </div>
                     <div className='flex items-center px-4'>   
                         <h3 className='p-2'> Dislikes: {dislikesCount} </h3>
                         {
-                            !alreadyDisliked && 
-                            <a onClick={handleDislike}>
-                            <Image src={dislike} className='hover:scale-105'></Image>
-                            </a>
+                            !alreadyDisliked ? 
+                            ( 
+                              <a onClick={handleDislike}>
+                                <Image src={dislike} className='hover:scale-105'></Image>
+                              </a>  
+                            )
+                            :
+                            (
+                              <a onClick={handleRemoveDislike}>
+                                <Image src={disliked} className='hover:scale-105'></Image>
+                              </a>  
+                            )
                         }
                     </div>
                 </div>
