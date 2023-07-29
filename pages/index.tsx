@@ -160,7 +160,7 @@ export default function Home() {
               <h1>You are not an admin!!!</h1>
             )}
           </div>
-          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-20 pt-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 pt-4'>
             {book.map((rushee) => (
                 <RusheeTile
                 key={rushee.Rushee_Uniquename}
@@ -171,6 +171,7 @@ export default function Home() {
                 Comments={rushee.Comments}
                 Dislikes={rushee.Dislikes}
                 imageUrl={rushee.imageUrl}
+                Big={false}
                 />
             ))}
           </div>

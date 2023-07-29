@@ -17,6 +17,7 @@ interface RusheeTileProps {
     Comments?: string[];
     Dislikes?: string[];
     imageUrl?: string;
+    Big: boolean;
 }
 
 const RusheeTile: React.FC<RusheeTileProps> = ({
@@ -27,6 +28,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     Comments,
     Dislikes,
     imageUrl,
+    Big
     }) => {
 
     const [alreadyLiked, setAlreadyLiked] = useState(false);
@@ -231,7 +233,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     };
 
     return (
-        <div className = 'flex flex-col w-80 sm:w-80 md:w-96 lg:w-96 max-w-xl mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'>
+        <div onClick={handleSeeMore} className = {`flex flex-col ${Big ? 'w-5/12' : 'w-80 sm:w-80 md:w-96 lg:w-96 max-w-xl'} mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md ${Big ? '' : 'transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'}`}>
             <div className="relative h-64 w-full">
                 {imageUrl ? 
                 (
@@ -246,11 +248,9 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
             <div className='flex flex-col items-center text-white'>
                 <h1 className='flex p-2 font-bold text-xl'>{Rushee_Name}</h1>
                 <hr className='w-full border-white mb-4' />
-                {/* Replace the 'h2' tag with 'h3' to improve the truncation */}
-                <h3 className="text-center line-clamp-2 truncate whitespace-normal px-2 ">
+                <h3 className={`text-center ${Big ? '' : 'line-clamp-2 truncate'} whitespace-normal px-2`}>
                   {Bio}
                 </h3>
-                <button onClick={handleSeeMore}> See More </button>
                 <div className='flex items-center p-2'>
                     <div className='flex items-center px-4'>
                         <h3 className='p-2'> Likes: {likesCount} </h3> 
