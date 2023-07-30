@@ -14,6 +14,9 @@ export default function RusheePage() {
     const [q3 , setQ3] = useState('');
     const [comments, setComments] = useState([]);
     const [imageUrl, setImageUrl] = useState('');
+    const [Major, setMajor] = useState('');
+    const [Year, setYear] = useState('');
+    const [Pronouns, setPronouns] = useState('');
     const [alreadyLiked, setAlreadyLiked] = useState(false);
     const [alreadyDisliked, setAlreadyDisliked] = useState(false);
     const [userEmail, setUserEmail] = useState('');
@@ -59,6 +62,9 @@ export default function RusheePage() {
               setQ3(rusheeData.q3);
               setLikes(rusheeData.Likes);
               setDislikes(rusheeData.Dislikes);
+              setMajor(rusheeData.Major);
+              setYear(rusheeData.Year);
+              setPronouns(rusheeData.Pronouns);
     
               // Check if the current user has already liked or disliked the rushee
               if (userEmail) {
@@ -165,6 +171,9 @@ export default function RusheePage() {
                 Likes={likes} Comments={comments} 
                 Dislikes={dislikes} 
                 imageUrl={imageUrl} 
+                Major={Major}
+                Year={Year}
+                Pronouns={Pronouns}
                 Big={true} 
                 alreadyLiked={alreadyLiked} 
                 alreadyDisliked={alreadyDisliked} 

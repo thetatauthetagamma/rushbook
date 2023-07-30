@@ -19,6 +19,9 @@ interface RusheeTileProps {
     Comments?: string[];
     Dislikes?: string[];
     imageUrl?: string;
+    Major: string;
+    Year: string;
+    Pronouns: string;
     Big: boolean;
     alreadyLiked?: boolean;
     alreadyDisliked?: boolean;
@@ -39,6 +42,9 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     Comments,
     Dislikes,
     imageUrl,
+    Major,
+    Year,
+    Pronouns,
     Big,
     alreadyLiked,
     alreadyDisliked,
@@ -69,26 +75,29 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                 }
             </div>
             <div className='flex flex-col items-center text-white'>
+              <div className='flex flex-col items-center'>
                 <h1 className='flex p-2 font-bold text-3xl'>{Rushee_Name}</h1>
-                <hr className='w-full border-white mb-4' />
+                <h3 className='flex text-md mb-2'>{Major} | {Year} | {Pronouns}</h3>
+              </div>
+                <hr className={`w-full border-whit ${Big ? 'mb-4' : ''}`} />
 
                 {Big && 
                   (
                     <div className='flex flex-col items-center'>
                       <div className='mb-4'>
-                        <h3 className='text-center font-bold'>Question 1</h3>
+                          <h3 className='text-center font-bold underline mb-2'>Write a few sentences about any interests you have?</h3>
                         <h3 className={`text-center whitespace-normal px-2`}>
                           {q1}
                         </h3>
                       </div>
                       <div className='mb-4'>
-                        <h3 className='text-center font-bold'>Question 2</h3>
+                        <h3 className='text-center font-bold underline mb-2'>Why do you want to join Theta Tau?</h3>
                         <h3 className={`text-center whitespace-normal px-2`}>
                           {q2}
                         </h3>
                       </div>
                       <div className='mb-4'>
-                        <h3 className='text-center font-bold'>Question 3</h3>
+                        <h3 className='text-center font-bold underline mb-2'>Tell us a Joke</h3>
                         <h3 className={`text-center whitespace-normal px-2`}>
                           {q3}
                         </h3>

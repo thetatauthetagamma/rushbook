@@ -13,6 +13,9 @@ interface Rushee {
   Comments: string[];
   Dislikes: string[];
   imageUrl: string;
+  Major: string;
+  Year: string;
+  Pronouns: string;
   q1: string;
   q2: string;
   q3: string;
@@ -178,6 +181,9 @@ export default function Home() {
                   Likes={rushee.Likes}
                   Dislikes={rushee.Dislikes}
                   imageUrl={rushee.imageUrl}
+                  Major={rushee.Major}
+                  Year={rushee.Year}
+                  Pronouns={rushee.Pronouns}
                   Big={false}
                   userEmail={userEmail}
                   />
