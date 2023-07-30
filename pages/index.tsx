@@ -137,6 +137,10 @@ export default function Home() {
     window.open('https://thetatau-umich.org')
   };
 
+  const handleHome = async () => {
+    Router.push('/')
+  }
+
   return (
     <div>
       <Head>
@@ -146,7 +150,7 @@ export default function Home() {
         <link rel="icon" href="favicon.png" />
       </Head>
       <div className='flex flex-col items-center p-2'>
-        <h1 className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 text-center'>THT Rushbook</h1>
+        <h1 onClick={handleHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 text-center'>THT Rushbook</h1>
         {isBrother && (
           <div className='flex flex-col items-center'>
             <h2 className='text-2xl font-bold text-center'>Welcome {userEmail}!</h2>
