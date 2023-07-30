@@ -56,6 +56,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     if (likesArray.includes(user.email)) {
                         setAlreadyLiked(true);
                     }
+                    setLikes(likesArray.length);
                 }
             }
         };
@@ -78,13 +79,14 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     if (DislikesArray.includes(user.email)) {
                         setAlreadyDisliked(true);
                     }
+                    setDislikes(DislikesArray.length);
                 }
             }
         };
 
         checkLikedStatus();
         checkDisLikedStatus();
-    }, []);
+    }, [likesCount, dislikesCount]);
 
 
     
@@ -255,7 +257,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     <div className='flex items-center px-4'>
                         <h3 className='p-2'> Likes: {likesCount} </h3> 
                         {
-                            !alreadyLiked ? 
+                            Big && (!alreadyLiked ? 
                             ( 
                               <a onClick={handleLike}>
                                 <Image src={like} className='hover:scale-105'></Image>
@@ -266,13 +268,13 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                               <a onClick={handleRemoveLike}>
                                 <Image src={liked} className='hover:scale-105'></Image>
                               </a>  
-                            )
+                            ))
                         }
                     </div>
                     <div className='flex items-center px-4'>   
                         <h3 className='p-2'> Dislikes: {dislikesCount} </h3>
-                        {
-                            !alreadyDisliked ? 
+                        { 
+                            Big && (!alreadyDisliked ? 
                             ( 
                               <a onClick={handleDislike}>
                                 <Image src={dislike} className='hover:scale-105'></Image>
@@ -283,7 +285,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                               <a onClick={handleRemoveDislike}>
                                 <Image src={disliked} className='hover:scale-105'></Image>
                               </a>  
-                            )
+                            ))
                         }
                     </div>
                 </div>

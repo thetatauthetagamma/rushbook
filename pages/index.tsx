@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Router from 'next/router';
 import supabase from '../supabase.js';
 import RusheeTile from '../components/RusheeTile';
-import { Session } from '@supabase/supabase-js';
 
 interface Rushee {
   Rushee_Uniquename: string;
@@ -127,6 +126,11 @@ export default function Home() {
     Router.push('/AddRushee');
   };
 
+  const handleJoin = async () => {
+    // Handle the join button
+    window.open('https://thetatau-umich.org')
+  };
+
   return (
     <div>
       <Head>
@@ -137,46 +141,54 @@ export default function Home() {
       </Head>
       <div className='flex flex-col items-center p-2'>
         <h1 className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 text-center'>THT Rushbook</h1>
-        {isBrother ? (
+        {isBrother && (
           <div className='flex flex-col items-center'>
             <h2 className='text-2xl font-bold'>Welcome {userEmail}!</h2>
             <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignOut}>Sign out</button>
           </div>
-        ) : (
-          <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignIn}>Sign in with Google</button>
-        )}
+        ) }
       </div>
       <hr className='h-1 mx-auto border-0 rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950' />
-      {isBrother && (
-        <div>
-          <div className='flex flex-col items-center p-8'>
-            <h1 className='text-xl font-bold pb-4 text-center'>Here are all our Rushees! Please leave your thoughts!</h1>
-            {isAdmin === 'admin' ? (
-              <div className='flex flex-col items-center'>
-                <h1 className='font-bold'>You are an admin</h1>
-                <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleAddRushee}>Add Rushee</button>
-              </div>
-            ) : (
-              <h1>You are not an admin!!!</h1>
-            )}
+      {isBrother ? 
+        (
+          <div>
+            <div className='flex flex-col items-center p-8'>
+              <h1 className='text-xl font-bold pb-4 text-center'>Here are all our Rushees! Please leave your thoughts!</h1>
+              {isAdmin === 'admin' ? (
+                <div className='flex flex-col items-center'>
+                  <h1 className='font-bold'>You are an admin</h1>
+                  <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleAddRushee}>Add Rushee</button>
+                </div>
+              ) : (
+                <h1>You are not an admin!!!</h1>
+              )}
+            </div>
+            <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 pt-4'>
+              {book.map((rushee) => (
+                  <RusheeTile
+                  key={rushee.Rushee_Uniquename}
+                  Rushee_Uniquename={rushee.Rushee_Uniquename}
+                  Rushee_Name={rushee.Rushee_Name}
+                  Bio={rushee.Bio}
+                  Likes={rushee.Likes}
+                  Comments={rushee.Comments}
+                  Dislikes={rushee.Dislikes}
+                  imageUrl={rushee.imageUrl}
+                  Big={false}
+                  />
+              ))}
+            </div>
           </div>
-          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 pt-4'>
-            {book.map((rushee) => (
-                <RusheeTile
-                key={rushee.Rushee_Uniquename}
-                Rushee_Uniquename={rushee.Rushee_Uniquename}
-                Rushee_Name={rushee.Rushee_Name}
-                Bio={rushee.Bio}
-                Likes={rushee.Likes}
-                Comments={rushee.Comments}
-                Dislikes={rushee.Dislikes}
-                imageUrl={rushee.imageUrl}
-                Big={false}
-                />
-            ))}
-          </div>
+        )
+      :
+      (
+        <div className='flex flex-col items-center p-8'>
+          <h1 className='text-xl font-bold pb-4 text-center'>This is for Theta Tau Brothers only!</h1>
+          <button onClick={handleJoin} className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg'>Join Us!</button>
+          <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignIn}>Sign in with Google</button>
         </div>
-      )}
+      )
+      }
     </div>
   );
 }
