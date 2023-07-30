@@ -175,6 +175,7 @@ export default function Home() {
                   Dislikes={rushee.Dislikes}
                   imageUrl={rushee.imageUrl}
                   Big={false}
+                  userEmail={userEmail}
                   />
               ))}
             </div>

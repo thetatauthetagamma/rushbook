@@ -18,6 +18,13 @@ interface RusheeTileProps {
     Dislikes?: string[];
     imageUrl?: string;
     Big: boolean;
+    alreadyLiked?: boolean;
+    alreadyDisliked?: boolean;
+    userEmail: string;
+    onLike?: () => void;
+    onDislike?: () => void;
+    onRemoveLike?: () => void;
+    onRemoveDislike?: () => void;
 }
 
 const RusheeTile: React.FC<RusheeTileProps> = ({
@@ -28,210 +35,20 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     Comments,
     Dislikes,
     imageUrl,
-    Big
+    Big,
+    alreadyLiked,
+    alreadyDisliked,
+    userEmail,
+    onLike,
+    onDislike,
+    onRemoveLike,
+    onRemoveDislike
     }) => {
 
-    const [alreadyLiked, setAlreadyLiked] = useState(false);
-    const [alreadyDisliked, setAlreadyDisliked] = useState(false);
-    const [likesCount, setLikes] = useState(Likes ? Likes.length : 0);
-    const [dislikesCount, setDislikes] = useState(Dislikes ? Dislikes.length : 0);
-
-    useEffect(() => {
-
-        const checkLikedStatus = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            console.log(user);
-            
-            if (user) {
-                const { data, error } = await supabase
-                .from('book')
-                .select('Likes')
-                .eq('Rushee_Uniquename', Rushee_Uniquename);
-
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log(data);
-                    const likesArray = data[0]?.Likes || [];
-                    if (likesArray.includes(user.email)) {
-                        setAlreadyLiked(true);
-                    }
-                    setLikes(likesArray.length);
-                }
-            }
-        };
-
-        const checkDisLikedStatus = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            console.log(user);
-            
-            if (user) {
-                const { data, error } = await supabase
-                .from('book')
-                .select('Dislikes')
-                .eq('Rushee_Uniquename', Rushee_Uniquename);
-
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log(data);
-                    const DislikesArray = data[0]?.Dislikes || [];
-                    if (DislikesArray.includes(user.email)) {
-                        setAlreadyDisliked(true);
-                    }
-                    setDislikes(DislikesArray.length);
-                }
-            }
-        };
-
-        checkLikedStatus();
-        checkDisLikedStatus();
-    }, [likesCount, dislikesCount]);
-
-
-    
-    const handleLike = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        console.log(user);
-      
-        if (user) {
-          const { data, error } = await supabase
-            .from('book')
-            .select('Likes')
-            .eq('Rushee_Uniquename', Rushee_Uniquename);
-      
-          if (error) {
-            console.log(error);
-          } else {
-            console.log(data);
-            const likesArray = data[0]?.Likes || [];
-            const updatedLikes = [...likesArray, user.email];
-      
-            const { error: updateError } = await supabase
-              .from('book')
-              .update({ Likes: updatedLikes })
-              .eq('Rushee_Uniquename', Rushee_Uniquename);
-      
-            if (updateError) {
-              console.log(updateError);
-            } else {
-              // After successful update, set the state to reflect that the user has already liked
-              setAlreadyLiked(true);
-              setLikes(updatedLikes.length);
-            }
-          }
-        }
-      };
-
-    const handleRemoveLike = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        console.log(user);
-      
-        if (user) {
-          const { data, error } = await supabase
-            .from('book')
-            .select('Likes')
-            .eq('Rushee_Uniquename', Rushee_Uniquename);
-      
-          if (error) {
-            console.log(error);
-          } else {
-            console.log(data);
-            const likesArray = data[0]?.Likes || [];
-      
-            // Remove the user's email from the Likes array
-            const updatedLikes = likesArray.filter((email: string | undefined) => email !== user.email);
-      
-            const { error: updateError } = await supabase
-              .from('book')
-              .update({ Likes: updatedLikes })
-              .eq('Rushee_Uniquename', Rushee_Uniquename);
-      
-            if (updateError) {
-              console.log(updateError);
-            } else {
-              // After successful update, set the state or perform any other necessary actions
-              console.log('Like removed successfully!');
-              setAlreadyLiked(false); // Set the state to reflect that the user has not liked
-              setLikes(updatedLikes.length);
-            }
-          }
-        }
-      };
-      
-      
-
-    const handleDislike = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        console.log(user);
-      
-        if (user) {
-          const { data, error } = await supabase
-            .from('book')
-            .select('Dislikes')
-            .eq('Rushee_Uniquename', Rushee_Uniquename);
-      
-          if (error) {
-            console.log(error);
-          } else {
-            console.log(data);
-            const DislikesArray = data[0]?.Dislikes || [];
-            const updatedDislikes = [...DislikesArray, user.email];
-      
-            const { error: updateError } = await supabase
-              .from('book')
-              .update({ Dislikes: updatedDislikes })
-              .eq('Rushee_Uniquename', Rushee_Uniquename);
-      
-            if (updateError) {
-              console.log(updateError);
-            } else {
-              // After successful update, set the state to reflect that the user has already disliked
-              setAlreadyDisliked(true);
-              setDislikes(updatedDislikes.length);
-            }
-          }
-        }
-      };
-
-    const handleRemoveDislike = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        console.log(user);
-      
-        if (user) {
-          const { data, error } = await supabase
-            .from('book')
-            .select('Dislikes')
-            .eq('Rushee_Uniquename', Rushee_Uniquename);
-      
-          if (error) {
-            console.log(error);
-          } else {
-            console.log(data);
-            const DislikesArray = data[0]?.Dislikes || [];
-            
-            // Remove the user's email from the Dislikes array
-            const updatedDislikes = DislikesArray.filter((email: string | undefined) => email !== user.email);
-      
-            const { error: updateError } = await supabase
-              .from('book')
-              .update({ Dislikes: updatedDislikes })
-              .eq('Rushee_Uniquename', Rushee_Uniquename);
-      
-            if (updateError) {
-              console.log(updateError);
-            } else {
-              // After successful update, set the state or perform any other necessary actions
-              console.log('Dislike removed successfully!');
-              setAlreadyDisliked(false); // Set the state to reflect that the user has not disliked
-              setDislikes(updatedDislikes.length);
-            }
-          }
-        }
-      };
-
     const handleSeeMore = () => {
+      if(!Big){
         Router.push(`/rushee/${Rushee_Uniquename}`);
+      }
     };
 
     return (
@@ -255,34 +72,34 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                 </h3>
                 <div className='flex items-center p-2'>
                     <div className='flex items-center px-4'>
-                        <h3 className='p-2'> Likes: {likesCount} </h3> 
+                        <h3 className='p-2'> Likes: {Likes?.length} </h3> 
                         {
                             Big && (!alreadyLiked ? 
                             ( 
-                              <a onClick={handleLike}>
+                              <a onClick={onLike}>
                                 <Image src={like} className='hover:scale-105'></Image>
                               </a>  
                             )
                             :
                             (
-                              <a onClick={handleRemoveLike}>
+                              <a onClick={onRemoveLike}>
                                 <Image src={liked} className='hover:scale-105'></Image>
                               </a>  
                             ))
                         }
                     </div>
                     <div className='flex items-center px-4'>   
-                        <h3 className='p-2'> Dislikes: {dislikesCount} </h3>
+                        <h3 className='p-2'> Dislikes: {Dislikes?.length} </h3>
                         { 
                             Big && (!alreadyDisliked ? 
                             ( 
-                              <a onClick={handleDislike}>
+                              <a onClick={onDislike}>
                                 <Image src={dislike} className='hover:scale-105'></Image>
                               </a>  
                             )
                             :
                             (
-                              <a onClick={handleRemoveDislike}>
+                              <a onClick={onRemoveDislike}>
                                 <Image src={disliked} className='hover:scale-105'></Image>
                               </a>  
                             ))
