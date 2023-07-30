@@ -149,7 +149,7 @@ export default function Home() {
         <h1 className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 text-center'>THT Rushbook</h1>
         {isBrother && (
           <div className='flex flex-col items-center'>
-            <h2 className='text-2xl font-bold'>Welcome {userEmail}!</h2>
+            <h2 className='text-2xl font-bold text-center'>Welcome {userEmail}!</h2>
             <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignOut}>Sign out</button>
           </div>
         ) }
