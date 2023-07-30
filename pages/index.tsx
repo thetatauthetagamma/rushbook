@@ -13,6 +13,9 @@ interface Rushee {
   Comments: string[];
   Dislikes: string[];
   imageUrl: string;
+  q1: string;
+  q2: string;
+  q3: string;
 }
 
 export default function Home() {
@@ -169,9 +172,10 @@ export default function Home() {
                   key={rushee.Rushee_Uniquename}
                   Rushee_Uniquename={rushee.Rushee_Uniquename}
                   Rushee_Name={rushee.Rushee_Name}
-                  Bio={rushee.Bio}
+                  q1={rushee.q1}
+                  q2={rushee.q2}
+                  q3={rushee.q3}
                   Likes={rushee.Likes}
-                  Comments={rushee.Comments}
                   Dislikes={rushee.Dislikes}
                   imageUrl={rushee.imageUrl}
                   Big={false}

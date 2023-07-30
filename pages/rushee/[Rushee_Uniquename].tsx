@@ -9,10 +9,10 @@ export default function RusheePage() {
     const { Rushee_Uniquename } = router.query;
     const [uniqueName, setUniqueName] = useState('');
     const [name , setName] = useState('');
-    const [bio, setBio] = useState('');
-
+    const [q1 , setQ1] = useState('');
+    const [q2 , setQ2] = useState('');
+    const [q3 , setQ3] = useState('');
     const [comments, setComments] = useState([]);
-
     const [imageUrl, setImageUrl] = useState('');
     const [alreadyLiked, setAlreadyLiked] = useState(false);
     const [alreadyDisliked, setAlreadyDisliked] = useState(false);
@@ -54,7 +54,9 @@ export default function RusheePage() {
               const rusheeData = data[0];
               setUniqueName(rusheeData.Rushee_Uniquename);
               setName(rusheeData.Rushee_Name);
-              setBio(rusheeData.Bio);
+              setQ1(rusheeData.q1);
+              setQ2(rusheeData.q2);
+              setQ3(rusheeData.q3);
               setLikes(rusheeData.Likes);
               setDislikes(rusheeData.Dislikes);
     
@@ -156,7 +158,10 @@ export default function RusheePage() {
             <hr className='h-2 my-4 w-full rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 mb-20' />
             <RusheeTile 
                 Rushee_Uniquename={uniqueName} 
-                Rushee_Name={name} Bio={bio} 
+                Rushee_Name={name}
+                q1={q1}
+                q2={q2}
+                q3={q3}
                 Likes={likes} Comments={comments} 
                 Dislikes={dislikes} 
                 imageUrl={imageUrl} 
@@ -168,7 +173,7 @@ export default function RusheePage() {
                 onDislike={handleDislike}
                 onRemoveLike={handleRemoveLike}
                 onRemoveDislike={handleRemoveDislike}
-                />
+              />
             <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mt-4' onClick={handleHome}>Back to Home</button>
         </div>
     );
