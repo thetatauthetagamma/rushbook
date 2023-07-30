@@ -76,7 +76,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
             </div>
             <div className='flex flex-col items-center text-white'>
               <div className='flex flex-col items-center'>
-                <h1 className='flex p-2 font-bold text-3xl'>{Rushee_Name}</h1>
+                <h1 className='flex p-2 font-bold text-3xl text-center'>{Rushee_Name}</h1>
                 <h3 className='flex text-md mb-2'>{Major} | {Year} | {Pronouns}</h3>
               </div>
                 <hr className={`w-full border-whit ${Big ? 'mb-4' : ''}`} />
