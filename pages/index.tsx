@@ -26,15 +26,29 @@ export default function Home() {
   const [userEmail, setUserEmail] = useState('');
   const [isBrother, setIsBrother] = useState(false);
   const [isAdmin, setIsAdmin] = useState('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     // Fetch the rushees info from the database
     const fetchBook = async () => {
-      const { data, error } = await supabase.from('book').select('*');
+      const { data, error } = await supabase.from('book').select('*')
       if (error) {
         console.log(error);
       } else {
         console.log(data);
+        const sortedData = data.sort((a: Rushee, b: Rushee) => {
+          const likesA = a.Likes.length;
+          const dislikesA = a.Dislikes.length;
+          const likesDiffA = likesA - dislikesA;
+    
+          const likesB = b.Likes.length;
+          const dislikesB = b.Dislikes.length;
+          const likesDiffB = likesB - dislikesB;
+    
+          // Sort in descending order based on the calculated value (likesDiff)
+          return likesDiffB - likesDiffA;
+        });
+        
         setBook(data || []);
       }
     };
@@ -141,6 +155,10 @@ export default function Home() {
     Router.push('/')
   }
 
+  const filteredBook = book.filter((rushee) =>
+    rushee.Rushee_Name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
       <Head>
@@ -151,31 +169,39 @@ export default function Home() {
       </Head>
       <div className='flex flex-col items-center p-2'>
         <h1 onClick={handleHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 text-center'>THT Rushbook</h1>
-        {isBrother && (
-          <div className='flex flex-col items-center'>
-            <h2 className='text-2xl font-bold text-center'>Welcome {userEmail}!</h2>
-            <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignOut}>Sign out</button>
-          </div>
-        ) }
+        <div className='flex'>
+          {isBrother && (
+            <div className='flex flex-col items-center'>
+              <h2 className='text-2xl font-bold text-center'>Welcome {userEmail}!</h2>
+              {isAdmin === 'admin' && (<h1 className='font-bold'>You are an admin</h1>)}
+              <div>
+                <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleGoogleSignOut}>Sign out</button>
+                {isAdmin === 'admin' && (<button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleAddRushee}>Add Rushee</button>)}
+              </div>
+            </div>
+          ) }
+        </div>
       </div>
       <hr className='h-2 w-full rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950' />
       {isBrother ? 
         (
           <div>
-            <div className='flex flex-col items-center p-8'>
-              <h1 className='text-xl font-bold pb-4 text-center'>Here are all our Rushees! Please leave your thoughts!</h1>
-              {isAdmin === 'admin' ? (
-                <div className='flex flex-col items-center'>
-                  <h1 className='font-bold'>You are an admin</h1>
-                  <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg' onClick={handleAddRushee}>Add Rushee</button>
-                </div>
-              ) : (
-                <h1>You are not an admin!!!</h1>
-              )}
+            <div className='flex flex-col items-center p-4'>
+              <h1 className='text-xl font-bold text-center'>Here are all our Rushees! Please leave your thoughts!</h1>
+              
+            </div>
+            <div className="flex justify-center items-center pb-4">
+              <input
+                type="text"
+                placeholder="Search by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="border rounded-md p-2 w-1/2 border-red-950"
+              />
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 pt-4'>
-              {book.map((rushee) => (
-                  <RusheeTile
+              {filteredBook.map((rushee) => (
+                <RusheeTile
                   key={rushee.Rushee_Uniquename}
                   Rushee_Uniquename={rushee.Rushee_Uniquename}
                   Rushee_Name={rushee.Rushee_Name}
@@ -190,7 +216,7 @@ export default function Home() {
                   Pronouns={rushee.Pronouns}
                   Big={false}
                   userEmail={userEmail}
-                  />
+                />
               ))}
             </div>
           </div>
