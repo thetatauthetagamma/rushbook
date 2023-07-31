@@ -6,7 +6,14 @@ import RusheeTile from '../components/RusheeTile';
 export default function AddRushee() {
     const [uniqueName, setUniqueName] = useState('');
     const [rusheeName, setRusheeName] = useState('');
-    const [rusheeBio, setRusheeBio] = useState('');
+    const [Major , setMajor] = useState('');
+    const [Year , setYear] = useState('');
+    const [pronouns , setPronouns] = useState('');
+    const [q1 , setQ1] = useState('');
+    const [q2 , setQ2] = useState('');
+    const [q3 , setQ3] = useState('');
+
+
     const [imageUrl, setImageUrl] = useState(null);
 
     const onImageChange = (e) => {
@@ -27,7 +34,12 @@ export default function AddRushee() {
             {
                 Rushee_Uniquename: uniqueName,
                 Rushee_Name: rusheeName,
-                Bio: rusheeBio,
+                Major: Major,
+                Year: Year,
+                Pronouns: pronouns,
+                Q1: q1,
+                Q2: q2,
+                Q3: q3,
                 Likes: [],
                 Comments: [],
                 Dislikes: [],
@@ -53,8 +65,13 @@ export default function AddRushee() {
     
         setUniqueName('');
         setRusheeName('');
-        setRusheeBio('');
         setImageUrl(null);
+        setMajor('');
+        setYear('');
+        setPronouns('');
+        setQ1('');
+        setQ2('');
+        setQ3('');
     
         console.log('Form submitted!');
     };
@@ -66,78 +83,135 @@ export default function AddRushee() {
 
     return (
         <div className="flex flex-col items-center">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-2 pb-8 text-center">
-                Input Rushee Information
-            </h1>
-            <div className="flex flex-col sm:flex-row items-center pt-8">
-                <form className="flex flex-col w-full max-w-xl mx-auto bg-white shadow-xl rounded-md px-20">
-                    <div className="flex items-center p-4">
-                        <label className="p-4 font-bold">Uniquename: </label>
-                        <input
-                            type="text"
-                            name="uniquename"
-                            value={uniqueName}
-                            onChange={(e) => setUniqueName(e.target.value)}
-                            className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
-                        />
-                    </div>
-                    <div className="flex items-center p-4">
-                        <label className="p-4 font-bold">Name: </label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={rusheeName}
-                            onChange={(e) => setRusheeName(e.target.value)}
-                            className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
-                        />
-                    </div>
-                    <div className="flex items-center p-4">
-                        <label className="p-4 font-bold">Bio: </label>
-                        <input
-                            type="text"
-                            name="bio"
-                            value={rusheeBio}
-                            onChange={(e) => setRusheeBio(e.target.value)}
-                            className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
-                        />
-                    </div>
-                    <div className="flex flex-col items-center p-4">
-                        <div className="flex p-4">
-                            <label className="p-4 font-bold">Image: </label>
+            <h1 onClick={BackToHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-4 text-center'>THT Rushbook</h1>
+            <hr className='h-2 my-4 w-full rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 mb-20' />
+            <div className="flex pt-8">
+                <div className="w-full pr-4 flex flex-col items-center">
+                    <form className="flex flex-col w-11/12 mx-auto bg-white shadow-xl rounded-md">
+                        <div className="flex items-center p-4">
+                            <label className="p-4 font-bold">Uniquename: </label>
                             <input
+                                type="text"
+                                name="uniquename"
+                                value={uniqueName}
+                                onChange={(e) => setUniqueName(e.target.value)}
                                 className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
-                                type="file"
-                                name="image"
-                                onChange={onImageChange}
                             />
                         </div>
-                    </div>
+                        <div className="flex items-center p-4">
+                            <label className="p-4 font-bold">Name: </label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={rusheeName}
+                                onChange={(e) => setRusheeName(e.target.value)}
+                                className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
+                            />
+                        </div>
+                        <div className="flex items-center p-4">
+                            <label className="p-4 font-bold">Major: </label>
+                            <input
+                                type="text"
+                                name="major"
+                                value={Major}
+                                onChange={(e) => setMajor(e.target.value)}
+                                className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
+                            />
+                        </div>
+                        <div className="flex items-center p-4">
+                            <label className="p-4 font-bold">Year: </label>
+                            <input
+                                type="text"
+                                name="year"
+                                value={Year}
+                                onChange={(e) => setYear(e.target.value)}
+                                className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
+                            />
+                        </div>
+                        <div className="flex items-center p-4">
+                            <label className="p-4 font-bold">Pronouns: </label>
+                            <input
+                                type="text"
+                                name="pronouns"
+                                value={pronouns}
+                                onChange={(e) => setPronouns(e.target.value)}
+                                className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
+                            />
+                        </div>
+                        <div className="flex items-center p-4">
+                            <label className="p-4 font-bold">Write a few sentences about any interests you have?</label>
+                            <input
+                                type="text"
+                                name="q1"
+                                value={q1}
+                                onChange={(e) => setQ1(e.target.value)}
+                                className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
+                            />
+                        </div>
+                        <div className="flex items-center p-4">
+                            <label className="p-4 font-bold">Why do you want to join Theta Tau? </label>
+                            <input
+                                type="text"
+                                name="q2"
+                                value={q2}
+                                onChange={(e) => setQ2(e.target.value)}
+                                className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
+                            />
+                        </div>
+                        <div className="flex items-center p-4">
+                            <label className="p-4 font-bold">Tell us a Joke</label>
+                            <input
+                                type="text"
+                                name="q3"
+                                value={q3}
+                                onChange={(e) => setQ3(e.target.value)}
+                                className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
+                            />
+                        </div>
+                        <div className="flex flex-col items-center p-4">
+                            <div className="flex p-4">
+                                <label className="p-4 font-bold">Image: </label>
+                                <input
+                                    className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300 text-lg"
+                                    type="file"
+                                    name="image"
+                                    onChange={onImageChange}
+                                />
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            className="bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mb-4"
+                            onClick={(e) => handleSubmit(e)}
+                        >
+                            Add Rushee
+                        </button>
+                    </form>
                     <button
-                        type="submit"
-                        className="bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mb-4"
-                        onClick={(e) => handleSubmit(e)}
+                        onClick={BackToHome}
+                        className="bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-6 p-2 rounded-lg hover:scale-105 shadow-lg mb-4"
                     >
-                        Add Rushee
-                    </button>
-                </form>
-                <div className="px-20">
+                Back to Home
+            </button>
+                </div>
+                <div className="w-full">
                     <h1 className="text-4xl font-bold text-black bg-clip-text text-transparent py-2 text-center">
                         Preview
                     </h1>
                     <RusheeTile
                         Rushee_Uniquename={uniqueName}
                         Rushee_Name={rusheeName}
-                        Bio={rusheeBio}
+                        Major={Major}
+                        Year={Year}
+                        Pronouns={pronouns}
+                        q1={q1}
+                        q2={q2}
+                        q3={q3}
                         imageUrl={imageUrl ? URL.createObjectURL(imageUrl) : ''}
+                        Big={true}
                     />
                 </div>
             </div>
-            <button
-                onClick={BackToHome}
-                className="bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-6 p-2 rounded-lg hover:scale-105 shadow-lg mb-4"
-            >
-                Back to Home
-            </button>
         </div>
     );
 }

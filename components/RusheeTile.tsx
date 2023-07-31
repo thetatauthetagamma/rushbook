@@ -62,7 +62,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     };
 
     return (
-        <div onClick={handleSeeMore} className = {`flex flex-col ${Big ? 'w-7/12' : 'w-80 sm:w-80 md:w-96 lg:w-96 max-w-xl'} mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md ${Big ? '' : 'transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'}`}>
+        <div onClick={handleSeeMore} className = {`flex flex-col ${Big ? 'w-10/12 sm:w-10/12 md:w-7/12' : 'w-80 sm:w-86 md:w-96 lg:w-96 max-w-xl'} mx-auto overflow-hidden bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 rounded-lg shadow-md ${Big ? '' : 'transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'}`}>
             <div className={`relative ${Big? 'h-96' : 'h-64'} w-full`}>
                 {imageUrl ? 
                 (
@@ -79,7 +79,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                 <h1 className='flex p-2 font-bold text-3xl text-center'>{Rushee_Name}</h1>
                 <h3 className='flex text-md mb-2'>{Major} | {Year} | {Pronouns}</h3>
               </div>
-                <hr className={`w-full border-whit ${Big ? 'mb-4' : ''}`} />
+                <hr className={`w-full border-white ${Big ? 'mb-4' : ''}`} />
 
                 {Big && 
                   (

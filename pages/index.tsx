@@ -158,7 +158,7 @@ export default function Home() {
           </div>
         ) }
       </div>
-      <hr className='h-1 mx-auto border-0 rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950' />
+      <hr className='h-2 w-full rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950' />
       {isBrother ? 
         (
           <div>

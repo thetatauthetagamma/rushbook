@@ -160,7 +160,7 @@ export default function RusheePage() {
 
     return (
         <div className="flex flex-col items-center">
-            <h1 onClick={handleHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent pb-2 text-center'>THT Rushbook</h1>
+            <h1 onClick={handleHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-4 pb-2 text-center'>THT Rushbook</h1>
             <hr className='h-2 my-4 w-full rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 mb-20' />
             <RusheeTile 
                 Rushee_Uniquename={uniqueName} 
