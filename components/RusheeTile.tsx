@@ -30,6 +30,7 @@ interface RusheeTileProps {
     onDislike?: () => void;
     onRemoveLike?: () => void;
     onRemoveDislike?: () => void;
+    onComment?: (comment: string) => void;
 }
 
 const RusheeTile: React.FC<RusheeTileProps> = ({
@@ -52,13 +53,29 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     onLike,
     onDislike,
     onRemoveLike,
-    onRemoveDislike
+    onRemoveDislike,
+    onComment
     }) => {
+
+    const [newComment, setNewComment] = useState<string>('');
 
     const handleSeeMore = () => {
       if(!Big){
         Router.push(`/rushee/${Rushee_Uniquename}`);
       }
+    };
+
+    const handleAddComment = () => {
+      console.log(newComment)
+      if (newComment.trim() === '') {
+        return; // Prevent adding empty comments
+      }
+      // Call the onComment prop and pass the new comment to the parent component
+      if (onComment) {
+        onComment(newComment);
+      }
+      // Clear the input box after adding the comment
+      setNewComment('');
     };
 
     return (
@@ -143,8 +160,35 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                 </div>
                 {
                   Big && 
-                  (
-                    <h4 className='p-2'> Comments: {Comments}</h4>
+                  ( 
+                    <div className='flex flex-col items-center'>
+                      <h1 className='p-2 font-bold'>
+                        Comments
+                      </h1>
+                      <div className="h-40 border border-white w-full overflow-y-auto p-2 text-center">
+                        {Comments && Comments.map((comment, index) => (
+                          <div key={index} className="mb-2 text-white">
+                            <p>{comment}</p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex flex-col items-center mt-2">
+                        <input
+                          type="text"
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          className="w-full p-2 border border-red rounded-md text-black"
+                          placeholder="Add a comment..."
+                        />
+                        <button
+                          className="bg-white text-red-900 mt-2 p-2 rounded-lg"
+                          onClick={handleAddComment}
+                        >
+                          Add Comment
+                        </button>
+                  </div>
+                    </div>
+                    
                   )
                 }
                 

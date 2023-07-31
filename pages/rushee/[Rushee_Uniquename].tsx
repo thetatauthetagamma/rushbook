@@ -12,7 +12,7 @@ export default function RusheePage() {
     const [q1 , setQ1] = useState('');
     const [q2 , setQ2] = useState('');
     const [q3 , setQ3] = useState('');
-    const [comments, setComments] = useState([]);
+    const [comments, setComments] = useState<string[]>([]);
     const [imageUrl, setImageUrl] = useState('');
     const [Major, setMajor] = useState('');
     const [Year, setYear] = useState('');
@@ -41,7 +41,7 @@ export default function RusheePage() {
         };
     
         fetchSession();
-      }, []);
+      }, [Rushee_Uniquename]);
     
       useEffect(() => {
         const fetchRushee = async () => {
@@ -62,6 +62,7 @@ export default function RusheePage() {
               setQ3(rusheeData.q3);
               setLikes(rusheeData.Likes);
               setDislikes(rusheeData.Dislikes);
+              setComments(rusheeData.Comments);
               setMajor(rusheeData.Major);
               setYear(rusheeData.Year);
               setPronouns(rusheeData.Pronouns);
@@ -158,6 +159,47 @@ export default function RusheePage() {
         router.push('/');
       };
 
+      const handleComment = async (comment: string) => {
+        if (Rushee_Uniquename && userEmail) {
+          try {
+            const { data, error } = await supabase
+              .from('brothers')
+              .select('*')
+              .eq('email', userEmail);
+      
+            if (error) {
+              console.log(error);
+              return;
+            }
+      
+            let firstName = '';
+            let lastName = '';
+      
+            if (data && data.length > 0) {
+              firstName = data[0].firstname;
+              lastName = data[0].lastname;
+            }
+      
+            const commentWithUser = `${firstName} ${lastName}: ${comment}`;
+      
+            // Update the state with the new comment
+            const updatedComments = [...comments, commentWithUser];
+            setComments(updatedComments);
+      
+            // Update the database with the new comments
+            await supabase
+              .from("book")
+              .update({ Comments: updatedComments })
+              .eq("Rushee_Uniquename", Rushee_Uniquename);
+      
+            console.log('Comment added to the database successfully.');
+          } catch (error) {
+            console.error('Error adding comment to the database:', error);
+          }
+        }
+      };
+      
+
     return (
         <div className="flex flex-col items-center">
             <h1 onClick={handleHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-4 pb-2 text-center'>THT Rushbook</h1>
@@ -168,7 +210,8 @@ export default function RusheePage() {
                 q1={q1}
                 q2={q2}
                 q3={q3}
-                Likes={likes} Comments={comments} 
+                Likes={likes} 
+                Comments={comments} 
                 Dislikes={dislikes} 
                 imageUrl={imageUrl} 
                 Major={Major}
@@ -182,6 +225,7 @@ export default function RusheePage() {
                 onDislike={handleDislike}
                 onRemoveLike={handleRemoveLike}
                 onRemoveDislike={handleRemoveDislike}
+                onComment={handleComment}
               />
             <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mt-4' onClick={handleHome}>Back to Home</button>
         </div>
