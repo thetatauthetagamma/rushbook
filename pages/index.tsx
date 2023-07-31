@@ -108,6 +108,7 @@ export default function Home() {
       }
       if (event === 'SIGNED_OUT') {
         setUserEmail('');
+        Router.push('/');
       }
     });
   }, []);
