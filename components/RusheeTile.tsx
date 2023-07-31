@@ -122,7 +122,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     </div>
                   )
                 }
-                <div className='flex items-center p-2'>
+                <div className='flex items-center pt-2'>
                     <div className='flex items-center px-4'>
                         <h3 className='p-2 font-bold'> Likes: {Likes?.length} </h3> 
                         {
@@ -158,6 +158,9 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                         }
                     </div>
                 </div>
+                <div>
+                      <h3 className='pb-2 font-bold'> Comments: {Comments?.length} </h3>
+                </div>
                 {
                   Big && 
                   ( 
@@ -169,7 +172,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                         {Comments && Comments.map((comment, index) => (
                           <div key={index} className="mb-2 text-black">
                             <p>{comment}</p>
-                            <hr className={`w-full border-black`} />
+                            <hr className={`w-full h-1 bg-gradient-to-r from-amber-400 via-orange-800 to-red-950`} />
                           </div>
                         ))}
                       </div>
@@ -182,7 +185,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                           placeholder="Add a comment..."
                         />
                         <button
-                          className="bg-white text-red-900 mt-2 p-2 rounded-lg mb-4"
+                          className="bg-white text-red-900 mt-2 p-2 rounded-lg mb-4 hover:scale-105 shadow-lg"
                           onClick={handleAddComment}
                         >
                           Add Comment

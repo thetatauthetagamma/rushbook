@@ -210,6 +210,7 @@ export default function Home() {
                   q3={rushee.q3}
                   Likes={rushee.Likes}
                   Dislikes={rushee.Dislikes}
+                  Comments={rushee.Comments}
                   imageUrl={rushee.imageUrl}
                   Major={rushee.Major}
                   Year={rushee.Year}
