@@ -34,15 +34,15 @@ export default function AddRushee() {
             {
                 Rushee_Uniquename: uniqueName,
                 Rushee_Name: rusheeName,
-                Major: Major,
-                Year: Year,
-                Pronouns: pronouns,
-                Q1: q1,
-                Q2: q2,
-                Q3: q3,
                 Likes: [],
                 Comments: [],
                 Dislikes: [],
+                q1: q1,
+                q2: q2,
+                q3: q3,
+                Major: Major,
+                Year: Year,
+                Pronouns: pronouns,
             },
         ]);
         if (error) {
@@ -187,14 +187,8 @@ export default function AddRushee() {
                             Add Rushee
                         </button>
                     </form>
-                    <button
-                        onClick={BackToHome}
-                        className="bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-6 p-2 rounded-lg hover:scale-105 shadow-lg mb-4"
-                    >
-                Back to Home
-            </button>
                 </div>
-                <div className="w-full">
+                <div className="w-full flex flex-col items-center">
                     <h1 className="text-4xl font-bold text-black bg-clip-text text-transparent py-2 text-center">
                         Preview
                     </h1>
@@ -210,6 +204,12 @@ export default function AddRushee() {
                         imageUrl={imageUrl ? URL.createObjectURL(imageUrl) : ''}
                         Big={true}
                     />
+                    <button
+                        onClick={BackToHome}
+                        className="bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-6 p-2 rounded-lg hover:scale-105 shadow-lg mb-4"
+                    >
+                        Back to Home
+                    </button>
                 </div>
             </div>
         </div>
