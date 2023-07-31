@@ -161,18 +161,19 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                 {
                   Big && 
                   ( 
-                    <div className='flex flex-col items-center'>
+                    <div className='flex flex-col items-center w-10/12'>
                       <h1 className='p-2 font-bold'>
                         Comments
                       </h1>
-                      <div className="h-40 border border-white w-full overflow-y-auto p-2 text-center">
+                      <div className="h-40 border border-white w-full overflow-y-auto p-2 bg-white rounded-lg">
                         {Comments && Comments.map((comment, index) => (
-                          <div key={index} className="mb-2 text-white">
+                          <div key={index} className="mb-2 text-black">
                             <p>{comment}</p>
+                            <hr className={`w-full border-black`} />
                           </div>
                         ))}
                       </div>
-                      <div className="flex flex-col items-center mt-2">
+                      <div className="flex flex-col items-center mt-2 w-full">
                         <input
                           type="text"
                           value={newComment}
@@ -181,7 +182,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                           placeholder="Add a comment..."
                         />
                         <button
-                          className="bg-white text-red-900 mt-2 p-2 rounded-lg"
+                          className="bg-white text-red-900 mt-2 p-2 rounded-lg mb-4"
                           onClick={handleAddComment}
                         >
                           Add Comment
