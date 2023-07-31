@@ -2,6 +2,7 @@ import RusheeTile from "../../components/RusheeTile";
 import { useRouter } from "next/router";
 import { useEffect , useState } from "react";
 import supabase from "../../supabase";
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function RusheePage() {
 
@@ -201,6 +202,7 @@ export default function RusheePage() {
       
 
     return (
+      <ProtectedRoute allowedRoles={['member','admin']}>
         <div className="flex flex-col items-center">
             <h1 onClick={handleHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-4 pb-2 text-center'>THT Rushbook</h1>
             <hr className='h-2 my-4 w-full rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 mb-20' />
@@ -229,5 +231,6 @@ export default function RusheePage() {
               />
             <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mt-4' onClick={handleHome}>Back to Home</button>
         </div>
+      </ProtectedRoute>
     );
 }

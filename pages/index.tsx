@@ -106,6 +106,9 @@ export default function Home() {
       if (event === 'SIGNED_IN' && session) {
         setUserEmail(session.user?.email || '');
       }
+      if (event === 'SIGNED_OUT') {
+        setUserEmail('');
+      }
     });
   }, []);
 

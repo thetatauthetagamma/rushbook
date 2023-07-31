@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import supabase from '../supabase.js';
 import Router from 'next/router';
 import RusheeTile from '../components/RusheeTile';
+import ProtectedRoute from '../components/ProtectedRoute.tsx';
 
 export default function AddRushee() {
     const [uniqueName, setUniqueName] = useState('');
@@ -82,6 +83,7 @@ export default function AddRushee() {
     };
 
     return (
+    <ProtectedRoute allowedRoles={['admin']}>
         <div className="flex flex-col items-center">
             <h1 onClick={BackToHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-4 text-center'>THT Rushbook</h1>
             <hr className='h-2 my-4 w-full rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 mb-20' />
@@ -213,5 +215,6 @@ export default function AddRushee() {
                 </div>
             </div>
         </div>
+    </ProtectedRoute>
     );
 }
