@@ -48,7 +48,7 @@ export default function RusheePage() {
         const fetchRushee = async () => {
           if (Rushee_Uniquename) {
             const { data, error } = await supabase
-              .from('book')
+              .from('THT-Book')
               .select('*')
               .eq('Rushee_Uniquename', Rushee_Uniquename);
     
@@ -109,7 +109,7 @@ export default function RusheePage() {
           setAlreadyLiked(true);
     
           // Update the database with the new liked status
-          await supabase.from('book').update({ Likes: updatedLikes }).eq('Rushee_Uniquename', Rushee_Uniquename);
+          await supabase.from('THT-Book').update({ Likes: updatedLikes }).eq('Rushee_Uniquename', Rushee_Uniquename);
         }
       };
 
@@ -122,7 +122,7 @@ export default function RusheePage() {
     
           // Update the database with the new liked status
           await supabase
-            .from("book")
+            .from('THT-Book')
             .update({ Likes: updatedLikes })
             .eq("Rushee_Uniquename", Rushee_Uniquename);
         }
@@ -137,7 +137,7 @@ export default function RusheePage() {
           setAlreadyDisliked(true);
     
           // Update the database with the new disliked status
-          await supabase.from('book').update({ Dislikes: updatedDislikes }).eq('Rushee_Uniquename', Rushee_Uniquename);
+          await supabase.from('THT-Book').update({ Dislikes: updatedDislikes }).eq('Rushee_Uniquename', Rushee_Uniquename);
         }
       };
 
@@ -150,7 +150,7 @@ export default function RusheePage() {
     
           // Update the database with the new disliked status
           await supabase
-            .from("book")
+            .from("THT-Book")
             .update({ Dislikes: updatedDislikes })
             .eq("Rushee_Uniquename", Rushee_Uniquename);
         }
@@ -164,7 +164,7 @@ export default function RusheePage() {
         if (Rushee_Uniquename && userEmail) {
           try {
             const { data, error } = await supabase
-              .from('brothers')
+              .from('THT-Brothers')
               .select('*')
               .eq('email', userEmail);
       
@@ -189,7 +189,7 @@ export default function RusheePage() {
       
             // Update the database with the new comments
             await supabase
-              .from("book")
+              .from('THT-Book')
               .update({ Comments: updatedComments })
               .eq("Rushee_Uniquename", Rushee_Uniquename);
       

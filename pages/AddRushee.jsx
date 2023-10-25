@@ -31,7 +31,7 @@ export default function AddRushee() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const { error } = await supabase.from('book').insert([
+        const { error } = await supabase.from('THT-Book').insert([
             {
                 Rushee_Uniquename: uniqueName,
                 Rushee_Name: rusheeName,

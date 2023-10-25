@@ -31,7 +31,7 @@ export default function Home() {
   useEffect(() => {
     // Fetch the rushees info from the database
     const fetchBook = async () => {
-      const { data, error } = await supabase.from('book').select('*')
+      const { data, error } = await supabase.from('THT-Book').select('*')
       if (error) {
         console.log(error);
       } else {
@@ -116,7 +116,7 @@ export default function Home() {
   useEffect(() => {
     // Check if the user is a brother
     const checkStatus = async () => {
-      const { data, error } = await supabase.from('emails').select('*').eq('email', userEmail);
+      const { data, error } = await supabase.from('THT-Emails').select('*').eq('email', userEmail);
       if (error) {
         console.log(error);
       } else {
