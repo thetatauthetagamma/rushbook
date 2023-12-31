@@ -2,7 +2,6 @@ import RusheeTile from "../../components/RusheeTile";
 import { useRouter } from "next/router";
 import { useEffect , useState } from "react";
 import supabase from "../../supabase";
-import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function RusheePage() {
 
@@ -13,7 +12,7 @@ export default function RusheePage() {
     const [q1 , setQ1] = useState('');
     const [q2 , setQ2] = useState('');
     const [q3 , setQ3] = useState('');
-    const [comments, setComments] = useState<string[]>([]);
+    const [comments, setComments] = useState([]);
     const [imageUrl, setImageUrl] = useState('');
     const [Major, setMajor] = useState('');
     const [Year, setYear] = useState('');
@@ -22,12 +21,9 @@ export default function RusheePage() {
     const [alreadyDisliked, setAlreadyDisliked] = useState(false);
     const [userEmail, setUserEmail] = useState('');
 
-    type Likes = string[];
-    type Dislikes = string[];
-
   // Update the useState hooks to specify the types
-    const [likes, setLikes] = useState<Likes>([]);
-    const [dislikes, setDislikes] = useState<Dislikes>([]);
+    const [likes, setLikes] = useState([]);
+    const [dislikes, setDislikes] = useState([]);
 
     useEffect(() => {
         const fetchSession = async () => {
@@ -82,7 +78,7 @@ export default function RusheePage() {
     
       useEffect(() => {
         const fetchRusheeImage = async () => {
-          const uniqueName = Rushee_Uniquename as string;
+          const uniqueName = Rushee_Uniquename;
         
           if (uniqueName) {
             const { data: ImageData, error } = await supabase
@@ -104,7 +100,7 @@ export default function RusheePage() {
       const handleLike = async () => {
         if (userEmail) {
           // Update the state with the new liked status
-          const updatedLikes: Likes = [...likes, userEmail];
+          const updatedLikes = [...likes, userEmail];
           setLikes(updatedLikes);
           setAlreadyLiked(true);
     
@@ -116,7 +112,7 @@ export default function RusheePage() {
       const handleRemoveLike = async () => {
         if (userEmail) {
           // Update the state with the new liked status
-          const updatedLikes: Likes = likes.filter((email) => email !== userEmail);
+          const updatedLikes =  likes.filter((email) => email !== userEmail);
           setLikes(updatedLikes);
           setAlreadyLiked(false);
     
@@ -132,7 +128,7 @@ export default function RusheePage() {
       const handleDislike = async () => {
         if (userEmail) {
           // Update the state with the new disliked status
-          const updatedDislikes: Dislikes = [...dislikes, userEmail];
+          const updatedDislikes = [...dislikes, userEmail];
           setDislikes(updatedDislikes);
           setAlreadyDisliked(true);
     
@@ -144,7 +140,7 @@ export default function RusheePage() {
       const handleRemoveDislike = async () => {
         if (userEmail) {
           // Update the state with the new disliked status
-          const updatedDislikes: Dislikes = dislikes.filter((email) => email !== userEmail);
+          const updatedDislikes =  dislikes.filter((email) => email !== userEmail);
           setDislikes(updatedDislikes);
           setAlreadyDisliked(false);
     
@@ -160,7 +156,7 @@ export default function RusheePage() {
         router.push('/');
       };
 
-      const handleComment = async (comment: string) => {
+      const handleComment = async (comment) => {
         if (Rushee_Uniquename && userEmail) {
           try {
             const { data, error } = await supabase
@@ -202,7 +198,6 @@ export default function RusheePage() {
       
 
     return (
-      <ProtectedRoute allowedRoles={['member','admin']}>
         <div className="flex flex-col items-center">
             <h1 onClick={handleHome} className='text-6xl lg:text-8xl font-bold bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 bg-clip-text text-transparent py-4 pb-2 text-center'>THT Rushbook</h1>
             <hr className='h-2 my-4 w-full rounded bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 mb-20' />
@@ -231,6 +226,5 @@ export default function RusheePage() {
               />
             <button className='bg-gradient-to-r from-amber-400 via-orange-800 to-red-950 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mt-4' onClick={handleHome}>Back to Home</button>
         </div>
-      </ProtectedRoute>
     );
 }

@@ -18,6 +18,12 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/AddRushee.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/AddRushee.jsx",
+    "pages/index.jsx"
+, "components/RusheeTile.js", "pages/rushee/[Rushee_Uniquename].jsx"  ],
   "exclude": ["node_modules"]
 }

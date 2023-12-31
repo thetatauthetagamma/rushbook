@@ -6,34 +6,8 @@ import liked from '../public/liked.svg'
 import dislike from '../public/dislike.svg'
 import disliked from '../public/disliked.svg'
 import supabase from '@/supabase'
-import Router from 'next/router'
 
-
-interface RusheeTileProps {
-    Rushee_Uniquename: string;
-    Rushee_Name: string;
-    q1: string;
-    q2: string;
-    q3: string;
-    Likes?: string[];
-    Comments?: string[];
-    Dislikes?: string[];
-    imageUrl?: string;
-    Major: string;
-    Year: string;
-    Pronouns: string;
-    Big: boolean;
-    alreadyLiked?: boolean;
-    alreadyDisliked?: boolean;
-    userEmail: string;
-    onLike?: () => void;
-    onDislike?: () => void;
-    onRemoveLike?: () => void;
-    onRemoveDislike?: () => void;
-    onComment?: (comment: string) => void;
-}
-
-const RusheeTile: React.FC<RusheeTileProps> = ({
+export default function RusheeTile ({
     Rushee_Uniquename,
     Rushee_Name,
     q1,
@@ -55,9 +29,10 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
     onRemoveLike,
     onRemoveDislike,
     onComment
-    }) => {
+    })
+    {
 
-    const [newComment, setNewComment] = useState<string>('');
+    const [newComment, setNewComment] = useState('');
 
     const handleSeeMore = () => {
       if(!Big){
@@ -195,11 +170,7 @@ const RusheeTile: React.FC<RusheeTileProps> = ({
                     
                   )
                 }
-                
             </div>
         </div>
     );
 };
-
-export default RusheeTile;
-
