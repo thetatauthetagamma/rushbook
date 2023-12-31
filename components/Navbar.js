@@ -2,22 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import supabase from '../supabase';
 import Cookies from 'js-cookie';
+import menuIcon from '../public/menu.svg';
+import Image from 'next/image';
+import { useMediaQuery } from 'react-responsive';
 
 export default function Navbar() {
   const router = useRouter();
   const [userExists, setUserExists] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentEmail, setCurrentEmail] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const isMobile = useMediaQuery({ maxWidth: 1023 });
 
   useEffect(() => {
     const fetchSession = async () => {
       try {
         const session = await supabase.auth.getSession();
         if (session) {
-          console.log(session);
-          const userEmail = session.data.session?.user.email || '';
-          setCurrentEmail(userEmail);
-          Cookies.set('user_email', userEmail); // Set the user_email cookie
+          setCurrentEmail(session.data.session?.user.email || '');
+          Cookies.set('user_email', session.data.session?.user.email || '');
         }
       } catch (error) {
         console.log(error);
@@ -26,27 +30,20 @@ export default function Navbar() {
 
     fetchSession();
 
-    // Listen for changes in the authentication state
     const authListener = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
-        const userEmail = session.user?.email || '';
-        setCurrentEmail(userEmail);
-        Cookies.set('user_email', userEmail); // Set the user_email cookie
+        setCurrentEmail(session.user?.email || '');
+        Cookies.set('user_email', session.user?.email || '');
       }
       if (event === 'SIGNED_OUT') {
         setCurrentEmail('');
-        Cookies.remove('user_email'); // Remove the user_email cookie
+        Cookies.set('user_email', '');
+        router.push('/');
       }
     });
-
-    // Cleanup the listener on component unmount
-    return () => {
-      authListener.unsubscribe();
-    };
-  }, []);
+  }, [currentEmail]);
 
   const handleGoogleSignIn = async () => {
-    // Handle the Google sign in
     const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
     console.log('here');
     console.log(data);
@@ -54,7 +51,6 @@ export default function Navbar() {
   };
 
   const handleGoogleSignOut = async () => {
-    // Handle the Google sign out
     const { error } = await supabase.auth.signOut();
     setUserExists(false);
     console.log(error);
@@ -62,15 +58,12 @@ export default function Navbar() {
 
   useEffect(() => {
     const checkUser = async () => {
-      const userEmailFromCookie = Cookies.get('user_email');
-
-      if (userEmailFromCookie) {
-        setCurrentEmail(userEmailFromCookie);
+      if (currentEmail) {
         try {
           const { data, error } = await supabase
             .from('Users')
             .select('email')
-            .eq('email', userEmailFromCookie)
+            .eq('email', currentEmail)
             .single();
 
           console.log(data);
@@ -78,11 +71,7 @@ export default function Navbar() {
           if (!error && data.email) {
             setUserExists(true);
           } else {
-            // If user does not exist, redirect to /createAccount with email as query parameter
-            router.push({
-              pathname: '/createAccount',
-              query: { email: userEmailFromCookie },
-            });
+            router.push('/createAccount');
           }
         } catch (error) {
           console.error('Error checking user authentication:', error);
@@ -95,49 +84,81 @@ export default function Navbar() {
     };
 
     checkUser();
-  }, []);
+  }, [currentEmail]);
 
-  function handleDisplayRushbooks() {
-    router.push({
-      pathname: '/myRushbooks',
-    });
-  }
+  const handleDisplayRushbooks = () => {
+    router.push('/myRushbooks');
+    setShowDropdown(false);
+  };
 
-  function handleDisplayCreateRushbook() {
-    router.push({
-      pathname: '/createRushbooks',
-    });
-  }
+  const handleDisplayCreateRushbook = () => {
+    router.push('/createRushbooks');
+    setShowDropdown(false);
+  };
 
-  function handleDisplayJoinRushbook() {
-    router.push({
-      pathname: '/joinRushbook',
-    });
-  }
+  const handleDisplayJoinRushbook = () => {
+    router.push('/joinRushbook');
+    setShowDropdown(false);
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
 
   return (
     <nav className="bg-gray-800 p-4 text-white">
-      <div className="container mx-auto flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Rushbook</h1>
+      <div className="container mx-auto flex items-center justify-between relative">
+        <h1 className="text-3xl font-bold">Rushbook</h1>
+        {isMobile && (
+          <div className="lg:hidden cursor-pointer" onClick={toggleDropdown}>
+            <Image src={menuIcon} alt="Menu Icon" className="w-6 h-6" />
+          </div>
+        )}
+        {showDropdown && isMobile && (
+          <div className="lg:hidden absolute top-full right-0 bg-gray-800 bg-opacity-75 z-50" onClick={toggleDropdown}>
+            <div className="container mx-auto p-4">
+              {userExists ? (
+                <div className="flex flex-col items-center space-y-4">
+                  <button onClick={handleDisplayRushbooks} className="text-lg font-semibold">
+                    My Rushbooks
+                  </button>
+                  <button onClick={handleDisplayCreateRushbook} className="text-lg font-semibold">
+                    Create New Rushbook
+                  </button>
+                  <button onClick={handleDisplayJoinRushbook} className="text-lg font-semibold">
+                    Join a Rushbook
+                  </button>
+                  <button onClick={handleGoogleSignOut} className="text-lg font-semibold">
+                    Sign out
+                  </button>
+                </div>
+              ) : (
+                <button onClick={handleGoogleSignIn} className="text-lg font-semibold">
+                  Sign in
+                </button>
+              )}
+            </div>
+          </div>
+        )}
         {!loading && (
-          <div className="flex space-x-4">
+          <div className={`lg:flex space-x-6 ${isMobile ? 'hidden' : 'flex'}`}>
             {userExists ? (
-              <>
-                <button onClick={handleDisplayRushbooks} className="nav-button">
+              <div className="lg:flex items-center space-x-4">
+                <button onClick={handleDisplayRushbooks} className="text-lg font-semibold">
                   My Rushbooks
                 </button>
-                <button onClick={handleDisplayCreateRushbook} className="nav-button">
+                <button onClick={handleDisplayCreateRushbook} className="text-lg font-semibold">
                   Create New Rushbook
                 </button>
-                <button onClick={handleDisplayJoinRushbook} className="nav-button">
+                <button onClick={handleDisplayJoinRushbook} className="text-lg font-semibold">
                   Join a Rushbook
                 </button>
-                <button onClick={handleGoogleSignOut} className="nav-button">
+                <button onClick={handleGoogleSignOut} className="text-lg font-semibold">
                   Sign out
                 </button>
-              </>
+              </div>
             ) : (
-              <button onClick={handleGoogleSignIn} className="nav-button">
+              <button onClick={handleGoogleSignIn} className="text-lg font-semibold">
                 Sign in
               </button>
             )}
