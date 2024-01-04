@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import thtlogo from '../public/tht-logo.png';
+import userlogo from '../public/user.svg';
 import like from '../public/like.svg';
 import liked from '../public/liked.svg';
 import dislike from '../public/dislike.svg';
@@ -61,11 +61,11 @@ export default function RusheeTile({
         Big ? '' : 'transform transition-all hover:scale-105 ease-in duration-200 hover:shadow-2xl'
       }`}
     >
-      <div className={`relative ${Big ? 'h-96' : 'h-64'} w-full`}>
+      <div className={`relative ${Big ? 'h-96' : 'h-80'} w-full`}>
         {imageUrl ? (
           <Image src={imageUrl} alt="Rushee" layout="fill" objectFit="cover" className="rounded-lg w-full" />
         ) : (
-          <Image src={thtlogo} alt="Rushee" layout="fill" objectFit="cover" className="rounded-lg w-full" />
+          <Image src={userlogo} alt="Rushee" layout="fill" objectFit="cover" className="rounded-lg w-full" />
         )}
       </div>
       <div className="flex flex-col items-center text-white">
@@ -97,13 +97,13 @@ export default function RusheeTile({
           <h3 className="pb-2 font-bold"> Comments: {Comments?.length} </h3>
         </div>
         {Big && (
-          <div className="flex flex-col items-center w-10/12">
+          <div className="flex flex-col items-center w-11/12">
             <h1 className="p-2 font-bold">Comments</h1>
-            <div className="h-40 border border-white w-full overflow-y-auto p-2 bg-white rounded-lg">
+            <div className="h-40 border border-white w-full overflow-y-auto bg-white rounded-lg">
               {Comments && Comments.map((comment, index) => (
                 <div key={index} className="mb-2 text-black">
-                  <p>{comment}</p>
-                  <hr className={`w-full h-1 bg-gradient-to-r from-amber-400 via-orange-800 to-red-950`} />
+                  <p className='m-2 '>{comment}</p>
+                  <hr className={`w-full h-1 bg-gray-300`} />
                 </div>
               ))}
             </div>
@@ -116,7 +116,7 @@ export default function RusheeTile({
                 placeholder="Add a comment..."
               />
               <button
-                className="bg-white text-red-900 mt-2 p-2 rounded-lg mb-4 hover:scale-105 shadow-lg"
+                className="bg-white text-gray-800 mt-2 p-2 rounded-lg mb-4 hover:scale-105 shadow-lg"
                 onClick={handleAddComment}
               >
                 Add Comment

@@ -1,30 +1,43 @@
-import React from 'react'
+import React from 'react';
 import RusheeTile from "../../components/RusheeTile";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import supabase from "../../supabase";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 export default function RusheePage() {
   const router = useRouter();
-  const { Rushee_Email } = router.query;
   const [rusheeData, setRusheeData] = useState({
-    email: "",
-    firstname: "",
-    lastname: "",
-    Likes: [],
-    Dislikes: [],
     Bio: "",
-    Major: "",
     Year: "",
+    Likes: [],
+    Major: "",
+    email: "",
     Gender: "",
     Comments: [],
+    Dislikes: [],
+    Lastname: "",
+    Pronouns: "",
+    Firstname: "",
   });
   const [imageUrl, setImageUrl] = useState("");
   const [alreadyLiked, setAlreadyLiked] = useState(false);
   const [alreadyDisliked, setAlreadyDisliked] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [currentRushee, setCurrentRushee] = useState("");
+  const [rushbookName, setRushbookName] = useState("");
+  const [rushbookData, setRushbookData] = useState(null);
 
   useEffect(() => {
+    // Get cookies when the component mounts
+    const cookieRushee = Cookies.get('currentRushee');
+    const cookieRushbook = Cookies.get('currentRushbook');
+
+    if (cookieRushee && cookieRushbook) {
+      setCurrentRushee(cookieRushee);
+      setRushbookName(cookieRushbook);
+    }
+
     const fetchSession = async () => {
       try {
         const session = await supabase.auth.getSession();
@@ -37,141 +50,187 @@ export default function RusheePage() {
     };
 
     fetchSession();
-  }, [Rushee_Email]);
+  }, []);
 
   useEffect(() => {
     const fetchRushee = async () => {
-      if (Rushee_Email) {
-        const { data, error } = await supabase
-          .from("Rushbooks")
-          .select("*")
-          .eq("Rushee_Email", Rushee_Email);
-
-        if (error) {
-          console.log(error);
-        } else if (data && data.length > 0) {
-          const rusheeData = data[0];
-          setRusheeData(rusheeData);
-
-          // Check if the current user has already liked or disliked the rushee
-          if (userEmail) {
-            setAlreadyLiked(rusheeData.Likes.includes(userEmail));
-            setAlreadyDisliked(rusheeData.Dislikes.includes(userEmail));
+      if (currentRushee) {
+        try {
+          const { data, error } = await supabase
+            .from("Rushbooks")
+            .select("rushees")
+            .eq("name", rushbookName);
+  
+          if (error) {
+            console.log(error);
+          } else if (data && data.length > 0) {
+            const rushee = data[0].rushees.find((r) => r.email === currentRushee);
+            setRusheeData(rushee);
+            // Save the fetched data to a state variable
+            setRushbookData(data[0]);
+            // Check if the current user has already liked or disliked the rushee
+            if (userEmail) {
+              console.log(rusheeData.Likes)
+              setAlreadyLiked(rusheeData.Likes.includes(userEmail));
+              setAlreadyDisliked(rusheeData.Dislikes.includes(userEmail));
+            }
           }
+        } catch (error) {
+          console.error("Error fetching rushee data:", error);
         }
       }
     };
-
+  
     fetchRushee();
-  }, [Rushee_Email, userEmail]);
+  }, [currentRushee, rushbookName, userEmail]);
 
   useEffect(() => {
     const fetchRusheeImage = async () => {
-      const email = Rushee_Email;
+      if (currentRushee) {
+        try {
+          const { data, error } = await supabase
+            .storage
+            .from("Rushees")
+            .download(`${currentRushee}.jpeg`);
 
-      if (email) {
-        const { data: ImageData, error } = await supabase
-          .storage
-          .from("rushee")
-          .download(email);
-
-        if (error) {
-          console.log(error);
-        } else {
-          setImageUrl(URL.createObjectURL(ImageData));
+          if (error) {
+            console.log(error);
+          } else {
+            setImageUrl(URL.createObjectURL(data));
+          }
+        } catch (error) {
+          console.error("Error fetching rushee image:", error);
         }
       }
     };
 
     fetchRusheeImage();
-  }, [Rushee_Email]);
+  }, [currentRushee]);
 
-  const handleLikeDislike = async (field, add) => {
-    if (userEmail) {
-      // Update the state with the new liked or disliked status
-      const updatedData = {
-        ...rusheeData,
-        [field]: add ? [...rusheeData[field], userEmail] : rusheeData[field].filter((email) => email !== userEmail),
-      };
-      setRusheeData(updatedData);
-
-      // Update the database with the new liked or disliked status
-      await supabase.from("V1-Book").update({ [field]: updatedData[field] }).eq("Rushee_Email", Rushee_Email);
+  const handleLike = async () => {
+    if (userEmail && !alreadyLiked && rushbookData) {
+      const updatedLikes = [...rusheeData.Likes, userEmail];
+      setRusheeData(prevData => ({ ...prevData, Likes: updatedLikes }));
+      setAlreadyLiked(true);
+  
+      await supabase.from('Rushbooks')
+        .update({
+          rushees: rushbookData.rushees.map(r => (r.email === currentRushee) ? { ...r, Likes: updatedLikes } : r)
+        })
+        .eq('name', rushbookName);
     }
   };
-
-  const handleLike = () => handleLikeDislike("Likes", true);
-  const handleRemoveLike = () => handleLikeDislike("Likes", false);
-  const handleDislike = () => handleLikeDislike("Dislikes", true);
-  const handleRemoveDislike = () => handleLikeDislike("Dislikes", false);
-
-  const handleHome = () => {
-    router.push("/");
+  
+  const handleRemoveLike = async () => {
+    if (userEmail && alreadyLiked && rushbookData) {
+      const updatedLikes = rusheeData.Likes.filter((email) => email !== userEmail);
+      setRusheeData(prevData => ({ ...prevData, Likes: updatedLikes }));
+      setAlreadyLiked(false);
+  
+      await supabase.from('Rushbooks')
+        .update({
+          rushees: rushbookData.rushees.map(r => (r.email === currentRushee) ? { ...r, Likes: updatedLikes } : r)
+        })
+        .eq('name', rushbookName);
+    }
   };
-
+  
+  const handleDislike = async () => {
+    if (userEmail && !alreadyDisliked && rushbookData) {
+      const updatedDislikes = [...rusheeData.Dislikes, userEmail];
+      setRusheeData(prevData => ({ ...prevData, Dislikes: updatedDislikes }));
+      setAlreadyDisliked(true);
+  
+      await supabase.from('Rushbooks')
+        .update({
+          rushees: rushbookData.rushees.map(r => (r.email === currentRushee) ? { ...r, Dislikes: updatedDislikes } : r)
+        })
+        .eq('name', rushbookName);
+    }
+  };
+  
+  const handleRemoveDislike = async () => {
+    if (userEmail && alreadyDisliked && rushbookData) {
+      const updatedDislikes = rusheeData.Dislikes.filter((email) => email !== userEmail);
+      setRusheeData(prevData => ({ ...prevData, Dislikes: updatedDislikes }));
+      setAlreadyDisliked(false);
+  
+      await supabase.from('Rushbooks')
+        .update({
+          rushees: rushbookData.rushees.map(r => (r.email === currentRushee) ? { ...r, Dislikes: updatedDislikes } : r)
+        })
+        .eq('name', rushbookName);
+    }
+  };
+  
   const handleComment = async (comment) => {
-    if (Rushee_Email && userEmail) {
+    if (currentRushee && userEmail && rushbookData) {
       try {
         const { data, error } = await supabase
           .from("Users")
           .select("*")
           .eq("email", userEmail);
-
+  
         if (error) {
-          console.log(error);
+          console.error("Error fetching user data:", error);
           return;
         }
-
+  
         let firstName = "";
         let lastName = "";
-
+  
         if (data && data.length > 0) {
           firstName = data[0].firstname;
           lastName = data[0].lastname;
         }
-
+  
         const commentWithUser = `${firstName} ${lastName}: ${comment}`;
-
-        // Update the state with the new comment
-        const updatedComments = [...rusheeData.Comments, commentWithUser];
-        setRusheeData({ ...rusheeData, Comments: updatedComments });
-
-        // Update the database with the new comments
-        await supabase.from("book").update({ Comments: updatedComments }).eq("Rushee_Email", Rushee_Email);
-
-        console.log("Comment added to the database successfully.");
+  
+        setRusheeData(prevData => ({ ...prevData, Comments: [...prevData.Comments, commentWithUser] }));
+  
+        await supabase.from('Rushbooks')
+          .update({
+            rushees: rushbookData.rushees.map(r => (r.email === currentRushee) ? { ...r, Comments: [...r.Comments, commentWithUser] } : r)
+          })
+          .eq('name', rushbookName);
       } catch (error) {
         console.error("Error adding comment to the database:", error);
       }
     }
   };
 
+  const handleHome = () => {
+    router.push(`/${rushbookName}`);
+  };
+
   return (
-      <div className="flex flex-col items-center m-8">
-        <RusheeTile
-          Rushee_Email={rusheeData.email}
-          Rushee_Name={`${rusheeData.firstname} ${rusheeData.lastname}`}
-          Likes={rusheeData.Likes}
-          Comments={rusheeData.Comments}
-          Dislikes={rusheeData.Dislikes}
-          imageUrl={imageUrl}
-          Major={rusheeData.Major}
-          Year={rusheeData.Year}
-          Gender={rusheeData.Gender}
-          Big={true}
-          alreadyLiked={alreadyLiked}
-          alreadyDisliked={alreadyDisliked}
-          userEmail={userEmail}
-          onLike={handleLike}
-          onDislike={handleDislike}
-          onRemoveLike={handleRemoveLike}
-          onRemoveDislike={handleRemoveDislike}
-          onComment={handleComment}
-        />
-        <button className="bg-black text-amber-400 m-2 p-2 rounded-lg hover:scale-105 shadow-lg mt-4" onClick={handleHome}>
-          Back to Home
-        </button>
-      </div>
+    <div className="flex flex-col items-center m-8">
+      <RusheeTile
+        Rushee_Email={rusheeData.email}
+        Rushee_Name={`${rusheeData.Firstname} ${rusheeData.Lastname}`}
+        Likes={rusheeData.Likes}
+        Bio={rusheeData.Bio}
+        Comments={rusheeData.Comments}
+        Dislikes={rusheeData.Dislikes}
+        imageUrl={imageUrl}
+        Major={rusheeData.Major}
+        Year={rusheeData.Year}
+        Gender={rusheeData.Gender}
+        Pronouns={rusheeData.Pronouns}
+        Big={true}
+        alreadyLiked={alreadyLiked}
+        alreadyDisliked={alreadyDisliked}
+        userEmail={userEmail}
+        onLike={handleLike}
+        onDislike={handleDislike}
+        onRemoveLike={handleRemoveLike}
+        onRemoveDislike={handleRemoveDislike}
+        onComment={handleComment}
+      />
+      <button className="bg-gray-800 text-white m-2 p-2 rounded-lg hover:scale-105 shadow-lg mt-4" onClick={handleHome}>
+        Back to Home
+      </button>
+    </div>
   );
 }
 

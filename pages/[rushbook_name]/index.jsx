@@ -77,11 +77,11 @@ export default function RushbookPage() {
   return (
     <div className="p-4">
       <h1 className="text-6xl font-bold text-gray-800 text-center mb-6">{rushbookName}</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {rusheesData.map((rushee) => (
           <RusheeTile
-            key={rushee.Email}
-            RusheeEmail={rushee.Email}
+            key={rushee.email}
+            RusheeEmail={rushee.email}
             Rushee_Name={`${rushee.Firstname} ${rushee.Lastname}`}
             Rushbook_Name={rushbookName}
             Bio={rushee.Bio}
