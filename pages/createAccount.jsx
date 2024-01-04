@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import supabase from '../supabase.js';
+import { useRouter } from 'next/router';
 
 export default function CreateAccount() {
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [middleInitial, setMiddleInitial] = useState('');
+  const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  // Get email from query parameter
-  const { email } = router.query;
 
   const handleFirstNameChange = (e) => {
     setFirstName(e.target.value);
@@ -25,10 +24,12 @@ export default function CreateAccount() {
     setMiddleInitial(e.target.value);
   };
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
       // Assuming you have a "Users" table in your Supabase database
       const { error } = await supabase.from('Users').insert([
         {
@@ -36,8 +37,11 @@ export default function CreateAccount() {
           firstname: firstName,
           lastname: lastName,
           middle_initial: middleInitial,
+          my_books: []
         },
       ]);
+
+      console.log(error)
 
       if (error) {
         setError('Error creating user account');
@@ -51,9 +55,6 @@ export default function CreateAccount() {
         router.push('/myRushbooks');
 
       }
-    } catch (error) {
-      setError('Error creating user account');
-    }
   };
 
   return (
@@ -88,6 +89,16 @@ export default function CreateAccount() {
             value={lastName}
             placeholder='Doe'
             onChange={handleLastNameChange}
+          />
+        </div>
+        <div className='mb-4'>
+          <label className='block text-gray-700 text-sm font-bold mb-2'>Email:</label>
+          <input
+            type='text'
+            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+            value={email}
+            placeholder='JohnDoe@gmail.com'
+            onChange={handleEmailChange}
           />
         </div>
         <div className='mb-4'>

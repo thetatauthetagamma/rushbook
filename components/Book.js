@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import supabase from '../supabase';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 export default function Book({ name }) {
-    const router = useRouter();
+  const router = useRouter();
   const [bookImage, setBookImage] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,8 +35,9 @@ export default function Book({ name }) {
     fetchBookImage();
   }, [name]);
 
-  function handleClick(){
-    router.push(`/rushbook/${name}`);
+  function handleClick() {
+    Cookies.set('currentRushbook', name);
+    router.push(`/${name}`);
   }
 
   return (
@@ -43,7 +45,7 @@ export default function Book({ name }) {
       {loading ? (
         <p className="text-gray-600">Loading book...</p>
       ) : (
-        <div onClick={handleClick} className='flex flex-col items-center hover:scale-105'>
+        <div onClick={handleClick} className="flex flex-col items-center hover:scale-105">
           <h3 className="text-4xl font-semibold mb-2">{name}</h3>
           {bookImage && (
             <Image
@@ -59,4 +61,3 @@ export default function Book({ name }) {
     </div>
   );
 }
-

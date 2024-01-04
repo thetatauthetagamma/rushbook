@@ -12,6 +12,7 @@ export default function Navbar() {
   const [loading, setLoading] = useState(true);
   const [currentEmail, setCurrentEmail] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [noAccount, setNoAccount] = useState(false);
 
   const isMobile = useMediaQuery({ maxWidth: 1023 });
 
@@ -67,10 +68,12 @@ export default function Navbar() {
             .single();
 
           console.log(data);
+          console.log(error);
 
           if (!error && data.email) {
             setUserExists(true);
           } else {
+            setNoAccount(true);
             router.push('/createAccount');
           }
         } catch (error) {
@@ -109,62 +112,66 @@ export default function Navbar() {
     <nav className="bg-gray-800 p-4 text-white">
       <div className="container mx-auto flex items-center justify-between relative">
         <h1 className="text-3xl font-bold">Rushbook</h1>
-        {isMobile && (
-          <div className="lg:hidden cursor-pointer" onClick={toggleDropdown}>
-            <Image src={menuIcon} alt="Menu Icon" className="w-6 h-6" />
-          </div>
-        )}
-        {showDropdown && isMobile && (
-          <div className="lg:hidden absolute top-full right-0 bg-gray-800 bg-opacity-75 z-50" onClick={toggleDropdown}>
-            <div className="container mx-auto p-4">
-              {userExists ? (
-                <div className="flex flex-col items-center space-y-4">
-                  <button onClick={handleDisplayRushbooks} className="text-lg font-semibold">
-                    My Rushbooks
-                  </button>
-                  <button onClick={handleDisplayCreateRushbook} className="text-lg font-semibold">
-                    Create New Rushbook
-                  </button>
-                  <button onClick={handleDisplayJoinRushbook} className="text-lg font-semibold">
-                    Join a Rushbook
-                  </button>
-                  <button onClick={handleGoogleSignOut} className="text-lg font-semibold">
-                    Sign out
-                  </button>
-                </div>
-              ) : (
-                <button onClick={handleGoogleSignIn} className="text-lg font-semibold">
-                  Sign in
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-        {!loading && (
-          <div className={`lg:flex space-x-6 ${isMobile ? 'hidden' : 'flex'}`}>
-            {userExists ? (
-              <div className="lg:flex items-center space-x-4">
-                <button onClick={handleDisplayRushbooks} className="text-lg font-semibold">
-                  My Rushbooks
-                </button>
-                <button onClick={handleDisplayCreateRushbook} className="text-lg font-semibold">
-                  Create New Rushbook
-                </button>
-                <button onClick={handleDisplayJoinRushbook} className="text-lg font-semibold">
-                  Join a Rushbook
-                </button>
-                <button onClick={handleGoogleSignOut} className="text-lg font-semibold">
-                  Sign out
-                </button>
+        {noAccount ? null : (
+          <>
+            {isMobile && (
+              <div className="lg:hidden cursor-pointer" onClick={toggleDropdown}>
+                <Image src={menuIcon} alt="Menu Icon" className="w-6 h-6" />
               </div>
-            ) : (
-              <button onClick={handleGoogleSignIn} className="text-lg font-semibold">
-                Sign in
-              </button>
             )}
-          </div>
+            {showDropdown && isMobile && (
+              <div className="lg:hidden absolute top-full right-0 bg-gray-800 bg-opacity-75 z-50" onClick={toggleDropdown}>
+                <div className="container mx-auto p-4">
+                  {userExists ? (
+                    <div className="flex flex-col items-center space-y-4">
+                      <button onClick={handleDisplayRushbooks} className="text-lg font-semibold">
+                        My Rushbooks
+                      </button>
+                      <button onClick={handleDisplayCreateRushbook} className="text-lg font-semibold">
+                        Create New Rushbook
+                      </button>
+                      <button onClick={handleDisplayJoinRushbook} className="text-lg font-semibold">
+                        Join a Rushbook
+                      </button>
+                      <button onClick={handleGoogleSignOut} className="text-lg font-semibold">
+                        Sign out
+                      </button>
+                    </div>
+                  ) : (
+                    <button onClick={handleGoogleSignIn} className="text-lg font-semibold">
+                      Sign in
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+            {!loading && (
+              <div className={`lg:flex space-x-6 ${isMobile ? 'hidden' : 'flex'}`}>
+                {userExists ? (
+                  <div className="lg:flex items-center space-x-4">
+                    <button onClick={handleDisplayRushbooks} className="text-lg font-semibold">
+                      My Rushbooks
+                    </button>
+                    <button onClick={handleDisplayCreateRushbook} className="text-lg font-semibold">
+                      Create New Rushbook
+                    </button>
+                    <button onClick={handleDisplayJoinRushbook} className="text-lg font-semibold">
+                      Join a Rushbook
+                    </button>
+                    <button onClick={handleGoogleSignOut} className="text-lg font-semibold">
+                      Sign out
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={handleGoogleSignIn} className="text-lg font-semibold">
+                    Sign in
+                  </button>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </nav>
-  );
+  );  
 }
