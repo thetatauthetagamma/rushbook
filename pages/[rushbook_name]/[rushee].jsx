@@ -69,11 +69,6 @@ export default function RusheePage() {
             // Save the fetched data to a state variable
             setRushbookData(data[0]);
             // Check if the current user has already liked or disliked the rushee
-            if (userEmail) {
-              console.log(rusheeData.Likes)
-              setAlreadyLiked(rusheeData.Likes.includes(userEmail));
-              setAlreadyDisliked(rusheeData.Dislikes.includes(userEmail));
-            }
           }
         } catch (error) {
           console.error("Error fetching rushee data:", error);
@@ -83,6 +78,17 @@ export default function RusheePage() {
   
     fetchRushee();
   }, [currentRushee, rushbookName, userEmail]);
+
+    // Log statements moved into the useEffect that depends on rusheeData changes
+    useEffect(() => {
+      // Check if the current user has already liked or disliked the rushee
+      if (userEmail && rusheeData) {
+        setAlreadyLiked(rusheeData.Likes.includes(userEmail));
+        setAlreadyDisliked(rusheeData.Dislikes.includes(userEmail));
+        console.log(alreadyLiked);
+        console.log(alreadyDisliked);
+      }
+    }, [rusheeData, userEmail]);
 
   useEffect(() => {
     const fetchRusheeImage = async () => {
