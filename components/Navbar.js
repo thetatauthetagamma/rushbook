@@ -104,6 +104,10 @@ export default function Navbar() {
     setShowDropdown(false);
   };
 
+  const handleHome = () => {
+    router.push('/');
+  }
+  
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -111,7 +115,7 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-800 p-4 text-white">
       <div className="container mx-auto flex items-center justify-between relative">
-        <h1 className="text-3xl font-bold">Rushbook</h1>
+        <h1 onClick={handleHome} className="text-3xl font-bold">Rushbook</h1>
         {noAccount ? null : (
           <>
             {isMobile && (
