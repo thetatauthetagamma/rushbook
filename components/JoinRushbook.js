@@ -96,42 +96,47 @@ export default function JoinRushbook({ currentEmail }) {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Rushbook Name:</label>
-          <input
-            type="text"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={rushbookName}
-            onChange={handleNameChange}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Rushbook Password:</label>
-          <input
-            type="password"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={rushbookPassword}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <button
-            type="submit"
-            className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Join Rushbook
-          </button>
-        </div>
-        {message && (
-          <p className={`${message.includes('Error') ? 'text-red-500' : 'text-green-500'} text-xs italic`}>
-            {message}
-          </p>
-        )}
-      </form>
+    <div className='flex flex-col items-center w-full'>
+      <h1 className="text-6xl lg:text-8xl font-bold text-white py-2 text-center">Join a Rushbook</h1>
+      <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md flex flex-col w-full">
+        <h2 className="text-2xl font-bold text-gray-800 text-center">Input a Name and Password for an existing rushbook!</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Rushbook Name:</label>
+            <input
+              type="text"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              value={rushbookName}
+              onChange={handleNameChange}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Rushbook Password:</label>
+            <input
+              type="password"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              value={rushbookPassword}
+              onChange={handlePasswordChange}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <button
+              type="submit"
+              className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Join Rushbook
+            </button>
+          </div>
+          {message && (
+            <p className={`${message.includes('Error') ? 'text-red-500' : 'text-green-500'} text-xs italic`}>
+              {message}
+            </p>
+          )}
+        </form>
+      </div>
     </div>
+    
   );
 }
