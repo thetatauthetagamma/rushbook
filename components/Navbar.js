@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import menuIcon from '../public/menu.svg';
 import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
+import icon from '../public/favicon.png';
 
 export default function Navbar() {
   const router = useRouter();
@@ -115,7 +116,10 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-800 p-4 text-white">
       <div className="container mx-auto flex items-center justify-between relative">
-        <h1 onClick={handleHome} className="text-3xl font-bold">Rushbook</h1>
+        <div className='flex flex-row items-center' onClick={handleHome}>
+          <h1 className="text-3xl font-bold mr-2">The Rushbook</h1>
+          <Image src = {icon} alt="Rushbook Icon" className="w-6 h-6" />
+        </div>
         {noAccount ? null : (
           <>
             {isMobile && (
