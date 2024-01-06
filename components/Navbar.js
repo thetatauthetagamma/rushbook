@@ -132,6 +132,9 @@ export default function Navbar() {
                 <div className="container mx-auto p-4">
                   {userExists ? (
                     <div className="flex flex-col items-center space-y-4">
+                      <button onClick={handleHome} className="text-lg font-semibold">
+                        Home
+                      </button>
                       <button onClick={handleDisplayRushbooks} className="text-lg font-semibold">
                         My Rushbooks
                       </button>
@@ -157,6 +160,9 @@ export default function Navbar() {
               <div className={`lg:flex space-x-6 ${isMobile ? 'hidden' : 'flex'}`}>
                 {userExists ? (
                   <div className="lg:flex items-center space-x-4">
+                    <button onClick={handleHome} className="text-lg font-semibold">
+                      Home
+                    </button>
                     <button onClick={handleDisplayRushbooks} className="text-lg font-semibold">
                       My Rushbooks
                     </button>

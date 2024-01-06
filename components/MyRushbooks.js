@@ -34,8 +34,8 @@ const MyRushbooks = ({ currentEmail }) => {
   }, [currentEmail]);
 
   return (
-    <div className="p-4 bg-gray-100 h-full">
-      <h1 className="text-6xl lg:text-8xl font-bold text-gray-800 py-2 text-center">My Rushbooks</h1>
+    <div className="h-full flex flex-col items-center">
+      <h1 className="text-6xl lg:text-8xl font-bold text-white py-2 text-center">My Rushbooks</h1>
       {loading ? (
         <p className="text-lg text-gray-600 text-center">Loading...</p>
       ) : myBooks.length === 0 ? (
